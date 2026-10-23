@@ -1,0 +1,15 @@
+
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Payload generated files and local uploads
+# Review these paths against your project before committing
