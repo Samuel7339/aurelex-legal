@@ -127,10 +127,13 @@ export default async function PageLayoutRenderer({
                             />
                         )
 
+
                     case 'guidingPrinciples': {
                         const principles = (block.principles ?? []).filter(
                             (item): item is GuidingPrinciple =>
-                                typeof item === 'object' && item !== null,
+                                typeof item === 'object' &&
+                                item !== null &&
+                                item._status === 'published',
                         )
 
                         return (
@@ -142,6 +145,7 @@ export default async function PageLayoutRenderer({
                             />
                         )
                     }
+
 
                     case 'practiceAreasGrid': {
                         const practiceAreas = (block.practiceAreas ?? []).filter(
@@ -171,10 +175,10 @@ export default async function PageLayoutRenderer({
                             block.displayMode === 'all'
                                 ? allAttorneys
                                 : (block.attorneys ?? []).filter(
-                                      (item): item is Attorney =>
-                                          typeof item === 'object' &&
-                                          item !== null,
-                                  )
+                                    (item): item is Attorney =>
+                                        typeof item === 'object' &&
+                                        item !== null,
+                                )
 
                         return (
                             <AttorneysSection
@@ -225,10 +229,10 @@ export default async function PageLayoutRenderer({
                             block.displayMode === 'all'
                                 ? allPosts
                                 : (block.posts ?? []).filter(
-                                      (item): item is Post =>
-                                          typeof item === 'object' &&
-                                          item !== null,
-                                  )
+                                    (item): item is Post =>
+                                        typeof item === 'object' &&
+                                        item !== null,
+                                )
 
                         return (
                             <ArticlesListSection

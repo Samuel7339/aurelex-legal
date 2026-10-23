@@ -12,6 +12,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const firmName = settings.firmName || ' Aurelex Legal'
 
+  const favicon =
+    settings.favicon && typeof settings.favicon === 'object'
+      ? settings.favicon
+      : null
+
   return {
     title: {
       default:
@@ -22,6 +27,12 @@ export async function generateMetadata(): Promise<Metadata> {
     description:
       settings.defaultSEO?.description ||
       'Trusted legal guidance and strategic legal solutions for what matters most.',
+
+      icons: favicon?.url
+      ? {
+          icon: favicon.url,
+        }
+      : undefined,
   }
 }
 
