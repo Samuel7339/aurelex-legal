@@ -1,3 +1,4 @@
+
 import Link from 'next/link'
 import type { PracticeArea } from '@/payload-types'
 
@@ -32,13 +33,13 @@ export default function PracticeAreasDirectory({
             {practiceAreas.map((area) => (
               <article
                 key={area.id}
-                className="group border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-amber-400 hover:shadow-lg sm:p-8"
+                className="group rounded-lg border border-slate-200/80 bg-white p-6 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:border-amber-400 hover:shadow-lg motion-reduce:transform-none motion-reduce:transition-none sm:p-8"
               >
-                <div className="flex size-12 items-center justify-center rounded-xl bg-amber-50 font-serif text-2xl text-amber-700">
+                <div className="flex size-12 items-center justify-center rounded-lg bg-amber-50 font-serif text-2xl text-amber-700 transition-colors duration-300 group-hover:bg-amber-100">
                   §
                 </div>
 
-                <h3 className="mt-6 font-serif text-xl font-semibold text-slate-900 sm:text-2xl">
+                <h3 className="mt-6 font-serif text-xl font-semibold text-slate-900 transition-colors duration-300 group-hover:text-amber-700 sm:text-2xl">
                   {area.title}
                 </h3>
 
@@ -62,10 +63,15 @@ export default function PracticeAreasDirectory({
 
                 <Link
                   href={`/practice-areas/${area.slug}`}
-                  className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-amber-700 underline underline-offset-4 transition hover:text-amber-900"
+                  className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-amber-700 transition-colors duration-300 hover:text-amber-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
                 >
                   Explore Practice Area
-                  <span aria-hidden="true">→</span>
+                  <span
+                    aria-hidden="true"
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  >
+                    →
+                  </span>
                 </Link>
               </article>
             ))}

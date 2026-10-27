@@ -57,7 +57,7 @@ export const AttorneysSectionBlock: Block = {
     {
       name: 'viewAllUrl',
       type: 'text',
-      defaultValue: '/attorneys',
+      defaultValue: '/our-attorneys',
     },
   ],
 }

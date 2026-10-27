@@ -26,67 +26,94 @@ export default function HomeHeroSection({
   slides,
 }: HomeHeroSectionProps) {
   const [activeSlide, setActiveSlide] = useState(0)
-
+  const [isChanging, setIsChanging] = useState(false)
+  
   const currentSlide = slides[activeSlide] ?? slides[0]
-
+   
   const heroImage =
     currentSlide?.image && typeof currentSlide.image === 'object'
       ? currentSlide.image
       : null
+  
+  const changeSlide = (direction: 'previous' | 'next') => {
+    if (isChanging || slides.length <= 1) return
+  
+    setIsChanging(true)
 
+    setTimeout(() => {
+      setActiveSlide((current) =>
+        direction === 'previous'
+          ? current === 0
+            ? slides.length - 1
+            : current - 1
+          : current === slides.length - 1
+            ? 0
+            : current + 1,
+      )
+  
+      setIsChanging(false)
+    }, 180)
+  }
+  
   const previousSlide = () => {
-    setActiveSlide((current) =>
-      current === 0 ? slides.length - 1 : current - 1,
-    )
+    changeSlide('previous')
   }
-
+  
   const nextSlide = () => {
-    setActiveSlide((current) =>
-      current === slides.length - 1 ? 0 : current + 1,
-    )
+    changeSlide('next')
   }
-
+      
   return (
-    <section id="home" className="bg-slate-900 text-white">
+    <section
+      id="home"
+      className="overflow-hidden bg-gradient-to-br from-[#10233f] via-[#142c49] to-[#0b192d] text-white"
+    >
       <div
-        className={`${container} grid min-h-[560px] items-center gap-10 py-12 sm:py-16 lg:grid-cols-2 lg:gap-12 lg:py-20`}
+        className={`${container} grid min-h-[560px] items-center gap-10 py-14 sm:py-16 lg:grid-cols-2 lg:gap-14 lg:py-20 xl:py-24`}
       >
         <div className="max-w-2xl">
-          <p className="mb-6 text-xs font-semibold uppercase tracking-[0.22em] text-amber-300">
-            {currentSlide?.eyebrow || 'Your rights. Our mission.'}
-          </p>
+          <div
+            className={`transition-opacity duration-500 ease-in-out ${
+              isChanging ? 'opacity-75' : 'opacity-100'
+            }`}
+          >
+            <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-300 sm:mb-6 sm:text-xs">
+              {currentSlide?.eyebrow || 'Your rights. Our mission.'}
+            </p>
 
-          <h1 className="font-serif text-2xl font-semibold leading-tight sm:text-4xl lg:text-5xl">
-            {currentSlide?.heading ||
-              'Trusted Legal Guidance for What Matters Most'}
-          </h1>
+            <h1 className="font-serif text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-[46px] lg:leading-[1.15] xl:text-[52px]">
+              {currentSlide?.heading ||
+                'Trusted Legal Guidance for What Matters Most'}
+            </h1>
 
-          <p className="mt-6 max-w-xl text-base leading-8 text-slate-300 sm:text-lg">
-            {currentSlide?.description ||
-              'At Aurelex Law Group, we combine deep legal knowledge with a client-first approach to protect your future and provide peace of mind.'}
-          </p>
+            <p className="mt-5 max-w-xl text-sm leading-7 text-slate-300 sm:mt-6 sm:text-base sm:leading-8 lg:text-[17px]">
+              {currentSlide?.description ||
+                'At Aurelex Law Group, we combine deep legal knowledge with a client-first approach to protect your future and provide peace of mind.'}
+            </p>
 
-          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
-            <a
-              href={currentSlide?.primaryButtonUrl || '#contact'}
-              className="inline-flex min-h-12 items-center justify-center bg-amber-600 px-6 py-3 font-semibold text-white transition hover:bg-amber-700"
-            >
-              {currentSlide?.primaryButtonLabel || 'Schedule a Consultation'}
-            </a>
+            <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-4">
+              <a
+                href={currentSlide?.primaryButtonUrl || '#contact'}
+                className="inline-flex min-h-12 items-center justify-center rounded-sm border border-amber-500 bg-amber-500 px-6 py-3 text-sm font-semibold text-[#10233f] shadow-md shadow-black/10 transition-all duration-300 hover:-translate-y-0.5 hover:border-amber-300 hover:bg-amber-300 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#10233f]"
+              >
+                {currentSlide?.primaryButtonLabel ||
+                  'Schedule a Consultation'}
+              </a>
 
-            <a
-              href={currentSlide?.secondaryButtonUrl || '#about'}
-              className="inline-flex min-h-12 items-center justify-center border border-slate-500 px-6 py-3 font-semibold text-white transition hover:border-amber-300 hover:text-amber-300"
-            >
-              {currentSlide?.secondaryButtonLabel || 'Learn More'}
-            </a>
+              <a
+                href={currentSlide?.secondaryButtonUrl || '#about'}
+                className="inline-flex min-h-12 items-center justify-center rounded-sm border border-white/30 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:border-amber-300/80 hover:bg-white/[0.06] hover:text-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#10233f]"
+              >
+                {currentSlide?.secondaryButtonLabel || 'Learn More'}
+              </a>
+            </div>
           </div>
 
-          <div className="mt-8 border-l-2 border-amber-500 pl-5">
-            <strong className="block font-serif text-3xl text-white">
+          <div className="mt-8 border-l-2 border-amber-400 pl-5 sm:mt-10">
+            <strong className="block font-serif text-3xl font-semibold tracking-tight text-white sm:text-4xl">
               25+
             </strong>
-            <span className="mt-1 block text-sm text-slate-300">
+            <span className="mt-1.5 block text-sm leading-6 text-slate-300">
               Years of Combined Legal Experience
             </span>
           </div>
@@ -111,25 +138,31 @@ export default function HomeHeroSection({
           )} */}
         </div>
 
-        <div className="relative h-[300px] w-full overflow-hidden border border-white/15 bg-slate-800 sm:h-[400px] lg:h-[480px]">
-          {heroImage?.url ? (
-            <Image
-              src={heroImage.url}
-              alt={
-                heroImage.alt ||
-                currentSlide?.heading ||
-                'Legal services'
-              }
-              fill
-              priority={activeSlide === 0}
-              className="object-cover"
-              sizes="(max-width: 1023px) 100vw, 50vw"
-            />
-          ) : (
-            <div className="flex h-full items-center justify-center px-6 text-center text-slate-300">
-              Add an image to this hero slide in Payload Admin.
-            </div>
-          )}
+        <div className="relative h-[300px] w-full overflow-hidden rounded-sm border border-white/15 bg-slate-800 shadow-2xl shadow-black/25 sm:h-[400px] lg:h-[480px]">
+          <div
+            className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${
+              isChanging ? 'opacity-75' : 'opacity-100'
+            }`}
+          >
+            {heroImage?.url ? (
+              <Image
+                src={heroImage.url}
+                alt={
+                  heroImage.alt ||
+                  currentSlide?.heading ||
+                  'Legal services'
+                }
+                fill
+                priority={activeSlide === 0}
+                className="object-cover"
+                sizes="(max-width: 1023px) 100vw, 50vw"
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center px-6 text-center text-sm leading-7 text-slate-300">
+                Add an image to this hero slide in Payload Admin.
+              </div>
+            )}
+          </div>
 
           {slides.length > 1 && (
             <>
@@ -137,7 +170,7 @@ export default function HomeHeroSection({
                 type="button"
                 onClick={previousSlide}
                 aria-label="Previous slide"
-                className="absolute left-4 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-slate-900/75 text-2xl text-white transition hover:bg-amber-600"
+                className="absolute left-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-slate-950/75 text-2xl text-white shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:border-amber-300 hover:bg-amber-500 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
               >
                 &#8249;
               </button>
@@ -146,7 +179,7 @@ export default function HomeHeroSection({
                 type="button"
                 onClick={nextSlide}
                 aria-label="Next slide"
-                className="absolute right-4 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-slate-900/75 text-2xl text-white transition hover:bg-amber-600"
+                className="absolute right-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-slate-950/75 text-2xl text-white shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:border-amber-300 hover:bg-amber-500 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
               >
                 &#8250;
               </button>

@@ -28,22 +28,6 @@ export const Footer: GlobalConfig = {
         },
       ],
     },
-    {
-      name: 'practiceAreaLinks',
-      type: 'array',
-      label: 'Practice Area Links',
-      fields: [
-        {
-          name: 'label',
-          type: 'text',
-          required: true,
-        },
-        {
-          name: 'url',
-          type: 'text',
-          required: true,
-        },
-      ],
-    },
+   
   ],
 }

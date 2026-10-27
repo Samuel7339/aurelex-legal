@@ -1230,13 +1230,6 @@ export interface Footer {
         id?: string | null;
       }[]
     | null;
-  practiceAreaLinks?:
-    | {
-        label: string;
-        url: string;
-        id?: string | null;
-      }[]
-    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1285,13 +1278,6 @@ export interface HeaderSelect<T extends boolean = true> {
 export interface FooterSelect<T extends boolean = true> {
   description?: T;
   quickLinks?:
-    | T
-    | {
-        label?: T;
-        url?: T;
-        id?: T;
-      };
-  practiceAreaLinks?:
     | T
     | {
         label?: T;

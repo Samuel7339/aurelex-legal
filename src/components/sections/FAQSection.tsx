@@ -28,26 +28,29 @@ export default function FAQSection({
   heading = 'How Can We Help You?',
   description = 'Find answers to common questions about our legal services and the legal process.',
 }: FAQSectionProps) {
-  const [openFaq, setOpenFaq] = useState<string | null>(null)
+  const [openGeneralFaq, setOpenGeneralFaq] = useState<string | null>(null)
+  const [openCaseFaq, setOpenCaseFaq] = useState<string | null>(null)
 
   if (faqs.length === 0) return null
 
   return (
-    <section id="faq" className="py-14 sm:py-16 lg:py-20">
+    <section id="faq" className="bg-stone-50/70 py-16 sm:py-20 lg:py-24">
       <div className={container}>
-        <div className="mx-auto mb-10 max-w-2xl text-center sm:mb-12">
-          <p className={eyebrow}>Frequently asked questions</p>
+        <div className="mx-auto mb-12 max-w-3xl text-center sm:mb-16">
+          <p className={eyebrow}>{/* Existing text remains unchanged */}Frequently asked questions</p>
 
           <h2 className={headingClass}>{heading}</h2>
 
           {description ? (
-            <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-600 sm:text-base">
+            <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base sm:leading-8">
               {description}
             </p>
           ) : null}
+
+          <div className="mx-auto mt-7 h-px w-16 bg-gradient-to-r from-transparent via-amber-500 to-transparent" />
         </div>
 
-        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-2 lg:gap-12">
+        <div className="mx-auto grid max-w-6xl items-start gap-8 lg:grid-cols-2 lg:gap-10">
           {groups.map((group) => {
             const groupFaqs = faqs.filter(
               (faq) => faq.category === group.value,
@@ -56,37 +59,49 @@ export default function FAQSection({
             if (groupFaqs.length === 0) return null
 
             return (
-              <div key={group.value}>
-                <h3 className="mb-3 font-serif text-lg font-semibold text-slate-900 sm:text-xl">
+              <div
+                key={group.value}
+                className="rounded-lg border border-slate-200/80 bg-white px-5 shadow-sm sm:px-7"
+              >
+                <h3 className="mb-0 border-b border-slate-200 py-5 font-serif text-lg font-semibold text-slate-900 sm:py-6 sm:text-xl">
                   {group.title}
                 </h3>
 
-                <div className="divide-y divide-slate-200/80 border-y border-slate-200">
+                <div className="divide-y divide-slate-100">
                   {groupFaqs.map((faq, index) => {
                     const key = `${group.value}-${faq.id}`
-                    const isOpen = openFaq === key
+                    const isGeneral = group.value === 'general'
+
+                    const isOpen = isGeneral
+                      ? openGeneralFaq === key
+                      : openCaseFaq === key
+
+                    const setOpenFaq = isGeneral
+                      ? setOpenGeneralFaq
+                      : setOpenCaseFaq
+
                     const answerId = `faq-answer-${group.value}-${index}`
 
                     return (
                       <div key={key}>
                         <button
                           type="button"
-                          className="group flex w-full items-center justify-between gap-4 py-4 text-left transition-colors duration-200 hover:text-amber-800 sm:py-5"
+                          className="group flex w-full items-center justify-between gap-4 rounded-sm py-5 text-left transition-colors duration-300 hover:text-amber-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-amber-500 sm:py-6"
                           aria-expanded={isOpen}
                           aria-controls={answerId}
                           onClick={() =>
                             setOpenFaq(isOpen ? null : key)
                           }
                         >
-                          <span className="text-sm font-medium leading-6 text-slate-800 transition-colors group-hover:text-amber-800 sm:text-base">
+                          <span className="text-sm font-medium leading-6 text-slate-800 transition-colors duration-300 group-hover:text-amber-800 sm:text-base">
                             {faq.question}
                           </span>
 
                           <span
-                            className={`flex size-7 shrink-0 items-center justify-center rounded-full border text-lg leading-none transition-all duration-200 ${
+                            className={`flex size-8 shrink-0 items-center justify-center rounded-full border text-lg leading-none transition-all duration-300 ${
                               isOpen
                                 ? 'border-amber-700 bg-amber-700 text-white'
-                                : 'border-slate-200 text-amber-700 group-hover:border-amber-700'
+                                : 'border-slate-200 bg-stone-50 text-amber-700 group-hover:border-amber-500 group-hover:bg-amber-50'
                             }`}
                             aria-hidden="true"
                           >
@@ -97,7 +112,7 @@ export default function FAQSection({
                         {isOpen ? (
                           <div
                             id={answerId}
-                            className="max-w-2xl pb-5 pr-8 text-sm leading-7 text-slate-600 sm:pr-10"
+                            className="max-w-2xl pb-6 pr-8 text-sm leading-7 text-slate-600 sm:pr-10"
                           >
                             {faq.answer}
                           </div>

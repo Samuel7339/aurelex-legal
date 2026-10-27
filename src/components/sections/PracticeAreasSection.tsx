@@ -15,7 +15,6 @@ const eyebrow =
 const sectionHeading =
   'font-serif text-2xl font-semibold leading-snug text-slate-900 sm:text-3xl lg:text-4xl'
 
-  
 export default function PracticeAreasSection({
   heading,
   practiceAreas,
@@ -43,14 +42,14 @@ export default function PracticeAreasSection({
           {practiceAreas.map((area, index) => (
             <a
               href={`/practice-areas/${area.slug}`}
-              className="group flex min-h-52 flex-col border border-slate-200 bg-white p-6 transition hover:-translate-y-1 hover:border-amber-500 hover:shadow-md sm:p-7"
+              className="group flex min-h-52 flex-col rounded-lg border border-slate-200/80 bg-white p-6 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:border-amber-400 hover:shadow-lg motion-reduce:transform-none motion-reduce:transition-none sm:p-7"
               key={area.id}
             >
               <span className="text-xs font-semibold tracking-[0.18em] text-amber-700">
                 {String(index + 1).padStart(2, '0')}
               </span>
 
-              <h3 className="mt-5 font-serif text-xl font-semibold text-slate-900 group-hover:text-amber-700">
+              <h3 className="mt-5 font-serif text-xl font-semibold text-slate-900 transition-colors duration-300 group-hover:text-amber-700">
                 {area.title}
               </h3>
 
@@ -61,20 +60,21 @@ export default function PracticeAreasSection({
                   : 'Learn more about our legal services.'}
               </p>
 
-              <span className="mt-5 text-sm font-semibold text-slate-800 group-hover:text-amber-700">
+              <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-slate-700 transition-colors duration-300 group-hover:text-amber-700">
                 Learn more
               </span>
             </a>
           ))}
         </div>
+
         <div className="mt-12 text-center">
-                    <Link
-                      href='/practice-areas'
-                      className="inline-block border border-gray-300 rounded-xl px-7 py-3 font-semibold text-gray-500 transition hover:bg-gray-700 hover:text-white"
-                    >
-                      View All Practice Areas
-                    </Link>
-                  </div>
+          <Link
+            href="/practice-areas"
+            className="inline-block rounded-lg border border-slate-300 px-7 py-3 font-semibold text-slate-700 transition-colors duration-300 hover:border-slate-800 hover:bg-slate-800 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
+          >
+            View All Practice Areas
+          </Link>
+        </div>
       </div>
     </section>
   )
