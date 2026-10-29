@@ -14,7 +14,7 @@ export const GuidingPrinciples: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'sortOrder', 'updatedAt'],
-    group: 'Website Content',
+    group: 'People & Legal Services',
   },
 
   access: {

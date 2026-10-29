@@ -14,7 +14,7 @@ export const FAQs: CollectionConfig = {
   admin: {
     useAsTitle: 'question',
     defaultColumns: ['question', 'category', 'updatedAt'],
-    group: 'Website Content',
+    group: 'Articles & Client Resources',
   },
 
   access: {

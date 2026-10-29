@@ -1,3 +1,4 @@
+
 import type { CollectionConfig } from 'payload'
 import { slugField } from 'payload'
 
@@ -14,7 +15,7 @@ export const Posts: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'author', 'publishedAt'],
-    group: 'Website Content',
+    group: 'Articles & Client Resources',
   },
 
   access: {
@@ -34,7 +35,6 @@ export const Posts: CollectionConfig = {
       type: 'text',
       required: true,
     },
-
     slugField({
       fieldToUse: 'title',
     }),
@@ -50,22 +50,36 @@ export const Posts: CollectionConfig = {
       required: true,
     },
     {
-      name: 'category',
-      type: 'select',
-      required: true,
-      options: [
-        { label: 'Legal Updates', value: 'legal-updates' },
-        { label: 'Family Law', value: 'family-law' },
-        { label: 'Corporate Law', value: 'corporate-law' },
-        { label: 'Criminal Law', value: 'criminal-law' },
-        { label: 'Property Law', value: 'property-law' },
-        { label: 'General Legal Advice', value: 'general-legal-advice' },
+      type: 'row',
+      fields: [
+        {
+          name: 'category',
+          type: 'select',
+          required: true,
+          options: [
+            { label: 'Legal Updates', value: 'legal-updates' },
+            { label: 'Family Law', value: 'family-law' },
+            { label: 'Corporate Law', value: 'corporate-law' },
+            { label: 'Criminal Law', value: 'criminal-law' },
+            { label: 'Property Law', value: 'property-law' },
+            {
+              label: 'General Legal Advice',
+              value: 'general-legal-advice',
+            },
+          ],
+          admin: {
+            width: '50%',
+          },
+        },
+        {
+          name: 'author',
+          type: 'relationship',
+          relationTo: 'attorneys',
+          admin: {
+            width: '50%',
+          },
+        },
       ],
-    },
-    {
-      name: 'author',
-      type: 'relationship',
-      relationTo: 'attorneys',
     },
     {
       name: 'content',

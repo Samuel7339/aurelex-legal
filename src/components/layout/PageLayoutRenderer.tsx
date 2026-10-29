@@ -103,7 +103,11 @@ export default async function PageLayoutRenderer({
                                 image={block.image}
                                 description={block.description}
                                 buttonLabel={block.buttonLabel ?? undefined}
-                                buttonUrl={block.buttonUrl ?? undefined}
+                                buttonUrl={
+                                    block.buttonDestinationType === 'page'
+                                        ? block.selectedButtonPage || undefined
+                                        : block.buttonUrl || undefined
+                                }
                             />
                         )
 
@@ -252,7 +256,11 @@ export default async function PageLayoutRenderer({
                                 key={key}
                                 heading={block.heading}
                                 buttonLabel={block.primaryButtonLabel}
-                                buttonUrl={block.primaryButtonUrl}
+                                buttonUrl={
+                                    block.destinationType === 'page'
+                                        ? block.selectedPage ?? block.primaryButtonUrl ?? ''
+                                        : block.primaryButtonUrl ?? ''
+                                }
                             />
                         )
 

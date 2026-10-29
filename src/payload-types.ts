@@ -249,12 +249,12 @@ export interface PracticeArea {
 export interface Attorney {
   id: string;
   name: string;
+  designation: string;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
   generateSlug?: boolean | null;
   slug: string;
-  designation: string;
   photo?: (string | null) | Media;
   /**
    * A brief introduction displayed on the Our Attorneys page.
@@ -333,12 +333,12 @@ export interface Faq {
 export interface Page {
   id: string;
   title: string;
+  pageType: 'home' | 'about' | 'practice-areas' | 'attorneys' | 'insights' | 'contact' | 'cases' | 'locations';
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
   generateSlug?: boolean | null;
   slug: string;
-  pageType: 'home' | 'about' | 'practice-areas' | 'attorneys' | 'insights' | 'contact' | 'cases' | 'locations';
   /**
    * General description of this page.
    */
@@ -389,7 +389,16 @@ export interface PageHeroBlock {
 export interface CTABlock {
   heading: string;
   primaryButtonLabel: string;
-  primaryButtonUrl: string;
+  /**
+   * Choose a website page or enter your own URL.
+   */
+  destinationType?: ('page' | 'custom') | null;
+  selectedPage?:
+    ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant') | null;
+  /**
+   * Enter a path such as /contact or an external URL such as https://example.com.
+   */
+  primaryButtonUrl?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'cta';
@@ -420,8 +429,22 @@ export interface HomeHeroBlock {
         description?: string | null;
         image?: (string | null) | Media;
         primaryButtonLabel?: string | null;
+        primaryButtonDestinationType?: ('page' | 'custom') | null;
+        primaryButtonSelectedPage?:
+          | ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant')
+          | null;
+        /**
+         * Enter a path such as /contact or a complete URL such as https://example.com.
+         */
         primaryButtonUrl?: string | null;
         secondaryButtonLabel?: string | null;
+        secondaryButtonDestinationType?: ('page' | 'custom') | null;
+        secondaryButtonSelectedPage?:
+          | ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant')
+          | null;
+        /**
+         * Enter a path such as /contact or a complete URL such as https://example.com.
+         */
         secondaryButtonUrl?: string | null;
         id?: string | null;
       }[]
@@ -476,6 +499,9 @@ export interface AttorneysSectionBlock {
    */
   attorneys?: (string | Attorney)[] | null;
   viewAllLabel?: string | null;
+  viewAllDestinationType?: ('page' | 'custom') | null;
+  selectedViewAllPage?:
+    ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant') | null;
   viewAllUrl?: string | null;
   id?: string | null;
   blockName?: string | null;
@@ -491,6 +517,15 @@ export interface WhyChooseUsBlock {
   description?: string | null;
   secondaryDescription?: string | null;
   buttonLabel?: string | null;
+  /**
+   * Choose a website page or enter your own URL.
+   */
+  destinationType?: ('page' | 'custom') | null;
+  selectedPage?:
+    ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant') | null;
+  /**
+   * Enter a path such as /contact or an external URL such as https://example.com.
+   */
   buttonUrl?: string | null;
   highlightText?: string | null;
   statOneValue?: string | null;
@@ -559,8 +594,11 @@ export interface AboutFirmBlock {
    * Leave empty to hide the button.
    */
   buttonLabel?: string | null;
+  buttonDestinationType?: ('page' | 'custom') | null;
+  selectedButtonPage?:
+    ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant') | null;
   /**
-   * Example: /about or /book-consultant
+   * Enter a path or a complete external URL.
    */
   buttonUrl?: string | null;
   id?: string | null;
@@ -663,8 +701,8 @@ export interface ConsultationBooking {
   phone: string;
   practiceArea?: (string | null) | PracticeArea;
   preferredDate?: string | null;
-  message?: string | null;
   status?: ('pending' | 'contacted' | 'confirmed' | 'cancelled') | null;
+  message?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -854,9 +892,9 @@ export interface PracticeAreasSelect<T extends boolean = true> {
  */
 export interface AttorneysSelect<T extends boolean = true> {
   name?: T;
+  designation?: T;
   generateSlug?: T;
   slug?: T;
-  designation?: T;
   photo?: T;
   shortDescription?: T;
   bio?: T;
@@ -908,9 +946,9 @@ export interface FaqsSelect<T extends boolean = true> {
  */
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
+  pageType?: T;
   generateSlug?: T;
   slug?: T;
-  pageType?: T;
   description?: T;
   layout?:
     | T
@@ -956,6 +994,8 @@ export interface PageHeroBlockSelect<T extends boolean = true> {
 export interface CTABlockSelect<T extends boolean = true> {
   heading?: T;
   primaryButtonLabel?: T;
+  destinationType?: T;
+  selectedPage?: T;
   primaryButtonUrl?: T;
   id?: T;
   blockName?: T;
@@ -983,8 +1023,12 @@ export interface HomeHeroBlockSelect<T extends boolean = true> {
         description?: T;
         image?: T;
         primaryButtonLabel?: T;
+        primaryButtonDestinationType?: T;
+        primaryButtonSelectedPage?: T;
         primaryButtonUrl?: T;
         secondaryButtonLabel?: T;
+        secondaryButtonDestinationType?: T;
+        secondaryButtonSelectedPage?: T;
         secondaryButtonUrl?: T;
         id?: T;
       };
@@ -1023,6 +1067,8 @@ export interface AttorneysSectionBlockSelect<T extends boolean = true> {
   displayMode?: T;
   attorneys?: T;
   viewAllLabel?: T;
+  viewAllDestinationType?: T;
+  selectedViewAllPage?: T;
   viewAllUrl?: T;
   id?: T;
   blockName?: T;
@@ -1037,6 +1083,8 @@ export interface WhyChooseUsBlockSelect<T extends boolean = true> {
   description?: T;
   secondaryDescription?: T;
   buttonLabel?: T;
+  destinationType?: T;
+  selectedPage?: T;
   buttonUrl?: T;
   highlightText?: T;
   statOneValue?: T;
@@ -1067,6 +1115,8 @@ export interface AboutFirmBlockSelect<T extends boolean = true> {
   image?: T;
   description?: T;
   buttonLabel?: T;
+  buttonDestinationType?: T;
+  selectedButtonPage?: T;
   buttonUrl?: T;
   id?: T;
   blockName?: T;
@@ -1141,8 +1191,8 @@ export interface ConsultationBookingsSelect<T extends boolean = true> {
   phone?: T;
   practiceArea?: T;
   preferredDate?: T;
-  message?: T;
   status?: T;
+  message?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1207,11 +1257,18 @@ export interface Header {
   navigation?:
     | {
         label: string;
-        url: string;
+        destinationType?: ('page' | 'custom') | null;
+        selectedPage?:
+          | ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant')
+          | null;
+        url?: string | null;
         id?: string | null;
       }[]
     | null;
   ctaLabel?: string | null;
+  ctaDestinationType?: ('page' | 'custom') | null;
+  ctaSelectedPage?:
+    ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant') | null;
   ctaUrl?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1226,7 +1283,30 @@ export interface Footer {
   quickLinks?:
     | {
         label: string;
-        url: string;
+        destinationType?: ('page' | 'custom') | null;
+        selectedPage?:
+          | ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant')
+          | null;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Choose a content collection and select multiple entries to display in the footer.
+   */
+  collectionLinks?:
+    | {
+        contentType: 'practice-areas' | 'attorneys' | 'posts';
+        practiceAreas?: (string | PracticeArea)[] | null;
+        attorneys?: (string | Attorney)[] | null;
+        posts?: (string | Post)[] | null;
+        showViewAll?: boolean | null;
+        viewAllLabel?: string | null;
+        viewAllDestinationType?: ('page' | 'custom') | null;
+        viewAllSelectedPage?:
+          | ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant')
+          | null;
+        viewAllCustomUrl?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -1262,10 +1342,14 @@ export interface HeaderSelect<T extends boolean = true> {
     | T
     | {
         label?: T;
+        destinationType?: T;
+        selectedPage?: T;
         url?: T;
         id?: T;
       };
   ctaLabel?: T;
+  ctaDestinationType?: T;
+  ctaSelectedPage?: T;
   ctaUrl?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1281,7 +1365,23 @@ export interface FooterSelect<T extends boolean = true> {
     | T
     | {
         label?: T;
+        destinationType?: T;
+        selectedPage?: T;
         url?: T;
+        id?: T;
+      };
+  collectionLinks?:
+    | T
+    | {
+        contentType?: T;
+        practiceAreas?: T;
+        attorneys?: T;
+        posts?: T;
+        showViewAll?: T;
+        viewAllLabel?: T;
+        viewAllDestinationType?: T;
+        viewAllSelectedPage?: T;
+        viewAllCustomUrl?: T;
         id?: T;
       };
   updatedAt?: T;

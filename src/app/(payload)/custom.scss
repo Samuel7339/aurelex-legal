@@ -1,0 +1,1121 @@
+
+:root {
+  --theme-bg: #f3f5f8;
+  --theme-elevation-0: #ffffff;
+  --theme-elevation-50: #f1f5f9;
+  --theme-elevation-100: #e2e8f0;
+  --theme-text: #172338;
+  --theme-elevation-800: #172338;
+  --theme-elevation-900: #111827;
+  --theme-success-500: #54745c;
+  --theme-warning-500: #c5a052;
+  --theme-error-500: #b54747;
+
+  --aurelex-navy: #172338;
+  --aurelex-ivory: #f1f5f9;
+  --aurelex-white: #ffffff;
+  --aurelex-gold: #b39455;
+  --aurelex-border: #d8dee7;
+  --aurelex-text: #334155;
+  --aurelex-muted: #64748b;
+  --aurelex-placeholder: #94a3b8;
+
+  --aurelex-radius: 6px;
+  --aurelex-field-gap: 12px;
+  --aurelex-transition: 160ms ease;
+}
+
+/* Page background */
+html,
+body {
+  background-color: #f3f5f8;
+}
+
+/* =========================================
+   LOGIN FORM
+   ========================================= */
+
+.login {
+  width: 100%;
+  max-width: 420px;
+  margin-inline: auto;
+  padding: 32px 24px;
+}
+
+.login h1 {
+  color: #172338;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+}
+
+.login label {
+  color: #25344b;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.login input {
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 10px 13px;
+  border: 1px solid #d8d2c6;
+  border-radius: 7px;
+  background-color: #ffffff;
+  color: #172338;
+  font-size: 14px;
+  box-shadow: none;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+}
+
+.login input:focus {
+  border-color: #9a7a42;
+  background-color: #ffffff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(197 160 82 / 16%);
+}
+
+.login input:-webkit-autofill,
+.login input:-webkit-autofill:hover,
+.login input:-webkit-autofill:focus,
+.login input:-webkit-autofill:active {
+  -webkit-text-fill-color: #172338;
+  caret-color: #172338;
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
+  box-shadow: 0 0 0 1000px #ffffff inset;
+  border: 1px solid #d8d2c6;
+  transition: background-color 99999s ease-out;
+}
+
+.login input:autofill {
+  background-color: #ffffff;
+  color: #172338;
+}
+
+/* =========================================
+   LOGIN BUTTON
+   ========================================= */
+
+.login button[type="submit"] {
+  min-height: 46px;
+  padding: 11px 18px;
+  border: 1px solid #172338;
+  border-radius: 7px;
+  background-color: #172338 !important;
+  color: #ffffff !important;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 3px 8px rgb(23 35 56 / 10%);
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.login button[type="submit"]:hover:not(:disabled) {
+  border-color: #9a7a42;
+  background-color: #253b5a !important;
+  color: #ffffff !important;
+  box-shadow: 0 5px 12px rgb(23 35 56 / 16%);
+  transform: translateY(-1px);
+}
+
+.login button[type="submit"]:focus-visible {
+  outline: 3px solid rgb(197 160 82 / 45%);
+  outline-offset: 3px;
+}
+
+.login button[type="submit"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  box-shadow: none;
+  transform: none;
+}
+
+/* =========================================
+   LINKS
+   ========================================= */
+
+.login a {
+  color: #8b682d;
+  font-size: 14px;
+  text-underline-offset: 3px;
+  transition: color 180ms ease;
+}
+
+.login a:hover {
+  color: #172338;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 480px) {
+  .login {
+    padding: 24px 18px;
+  }
+
+  .login h1 {
+    font-size: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login input,
+  .login button,
+  .login a {
+    transition: none;
+  }
+}
+
+/* =========================================
+   AURELEX LEGAL — CLEAN SIDEBAR
+   ========================================= */
+
+.nav {
+  background-color: #edf1f6;
+  padding: 6px 8px;
+}
+
+.nav__group-label,
+.nav-group__label {
+  color: #53647b;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.nav-group__toggle:hover,
+.nav-group__toggle[aria-expanded="true"] {
+  background-color: #263b58;
+  color: #ffffff;
+  border-radius: 6px;
+}
+
+.nav-group__toggle:hover *,
+.nav-group__toggle[aria-expanded="true"] * {
+  color: #ffffff;
+  padding: 1px 0px 1px 3px;
+}
+
+.nav a {
+  margin: 1px 0;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: #33445d;
+  background-color: transparent;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.nav a svg {
+  color: inherit;
+  stroke-width: 1.8;
+}
+
+.nav a:hover {
+  background-color: #263b58;
+  border-color: #263b58;
+  color: #ffffff;
+}
+
+.nav a:focus-visible {
+  outline: 2px solid #b39455;
+  outline-offset: 2px;
+}
+
+.nav a[aria-current="page"],
+.nav a.active {
+  background-color: #dce5f0;
+  color: #172338;
+  border-left: 3px solid #b39455;
+  font-weight: 600;
+}
+
+.nav a[aria-current="page"]:hover,
+.nav a.active:hover {
+  background-color: #263b58;
+  color: #ffffff;
+  border-left-color: #b39455;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a {
+    transition: none;
+  }
+}
+
+/* =========================================
+   AURELEX LEGAL — ADMIN USER / PROFILE ICON
+   ========================================= */
+
+.app-header__account,
+.app-header__actions button,
+header button {
+  color: #172338;
+}
+
+.app-header__account svg,
+.app-header__actions button svg {
+  color: #172338;
+  stroke-width: 1.8;
+}
+
+.app-header__account:hover,
+.app-header__actions button:hover {
+  background-color: #263b58;
+  color: #ffffff;
+  border-radius: 10px;
+}
+
+.app-header__account:hover svg,
+.app-header__actions button:hover svg {
+  color: #ffffff;
+}
+
+/* =========================================
+   AURELEX LEGAL — COLLECTION LISTS
+   ========================================= */
+
+.collection-list__wrap {
+  --al-navy: #172338;
+  --al-navy-hover: #263b58;
+  --al-gold: #b39455;
+  --al-ivory: #f1f5f9;
+  --al-border: #e4e7eb;
+  --al-text: #263449;
+  --al-muted: #687487;
+
+  color: var(--al-text);
+}
+
+.collection-list__wrap .list-header__title {
+  color: var(--al-navy);
+  font-size: 1.5rem;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+}
+
+.collection-list__wrap .list-create-new-doc__create-new-button {
+  background: var(--al-navy);
+  color: #ffffff;
+  border: 1px solid var(--al-navy);
+  border-radius: 6px;
+  font-weight: 550;
+  box-shadow: none;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.collection-list__wrap button[aria-label="Bulk Upload"] {
+  background: var(--al-navy);
+  color: #ffffff;
+  border: 1px solid var(--al-navy);
+  border-radius: 6px;
+  font-weight: 550;
+  box-shadow: none;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.collection-list__wrap .list-create-new-doc__create-new-button:hover {
+  background: var(--al-navy-hover);
+  border-color: var(--al-navy-hover);
+  color: #ffffff;
+}
+
+.collection-list__wrap .search-filter__input {
+  color: var(--al-navy);
+  background: #ffffff;
+  border-color: #d9dee6;
+  border-radius: 6px;
+}
+
+.collection-list__wrap .search-filter__input:focus {
+  border-color: var(--al-gold);
+  box-shadow: 0 0 0 1px var(--al-gold);
+  outline: none;
+}
+
+.collection-list__wrap .pill {
+  color: var(--al-navy);
+  background: #ffffff;
+  border: 1px solid #d9dee6;
+  border-radius: 6px;
+  font-weight: 500;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.collection-list__wrap .pill:hover {
+  color: #ffffff;
+  background: var(--al-navy);
+  border-color: var(--al-navy);
+}
+
+.collection-list__tables .table-wrap {
+  max-width: 100%;
+  background: #ffffff;
+  border: 1px solid var(--al-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.collection-list__tables table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.collection-list__tables thead th {
+  background: var(--al-navy);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  border: 0;
+  border-bottom: 2px solid var(--al-gold);
+}
+
+.collection-list__tables thead th,
+.collection-list__tables thead th * {
+  color: #ffffff;
+}
+
+.collection-list__tables thead .sort-column__label {
+  font-weight: 600;
+}
+
+.collection-list__tables thead th,
+.collection-list__tables tbody td {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.collection-list__tables tbody tr:nth-child(odd) td {
+  background: #ffffff;
+}
+
+.collection-list__tables tbody tr:nth-child(even) td {
+  background: var(--al-ivory);
+}
+
+.collection-list__tables tbody tr td {
+  border-bottom: 1px solid var(--al-border);
+}
+
+.collection-list__tables tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.collection-list__tables tbody tr:hover td {
+  background: #edf1f6;
+}
+
+.collection-list__tables .cell-title a {
+  color: var(--al-navy);
+  font-weight: 550;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.collection-list__tables .cell-title a:hover {
+  color: #92723a;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.collection-list__wrap .page-controls {
+  color: var(--al-muted);
+  font-size: 13px;
+}
+
+.collection-list__wrap .page-controls button {
+  border-radius: 5px;
+}
+
+.collection-list__tables {
+  min-width: 0;
+}
+
+/* =========================================
+   AURELEX LEGAL — PAYLOAD ADMIN FORMS
+   ========================================= */
+
+form .field-type {
+  margin-bottom: var(--aurelex-field-gap);
+}
+
+.field-label {
+  color: #26364e;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 5px;
+}
+
+.field-type input:not(.rs__input):not([type='checkbox']):not([type='radio']):not([type='file']),
+.field-type textarea,
+.field-type select {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--aurelex-radius);
+  color: #172338;
+  font-size: 14px;
+  box-shadow: none;
+  transition:
+    border-color var(--aurelex-transition),
+    box-shadow var(--aurelex-transition),
+    background-color var(--aurelex-transition);
+}
+
+.field-type input:not(.rs__input):not([type='checkbox']):not([type='radio']):not([type='file']) {
+  height: 38px;
+  min-height: 38px;
+  padding: 8px 10px;
+  box-sizing: border-box;
+}
+
+.field-type textarea {
+  min-height: 88px;
+  padding: 10px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.field-type input::placeholder,
+.field-type textarea::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+
+.field-type input:not(.rs__input):not([type='checkbox']):not([type='radio']):not([type='file']):hover,
+.field-type textarea:hover,
+.field-type select:hover {
+  border-color: #aab8ca;
+}
+
+.field-type input:not(.rs__input):not([type='checkbox']):not([type='radio']):not([type='file']):focus-visible,
+.field-type textarea:focus-visible,
+.field-type select:focus-visible {
+  background-color: #ffffff;
+  border-color: #526b8b;
+  outline: 2px solid rgb(82 107 139 / 15%);
+  outline-offset: 1px;
+  box-shadow: none;
+}
+
+.field-description {
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 5px;
+}
+
+.field-error {
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 5px;
+}
+
+.field-type input[type='checkbox'],
+.field-type input[type='radio'] {
+  accent-color: #263b58;
+}
+
+button.btn,
+a.btn {
+  border-radius: var(--aurelex-radius);
+  font-size: 13px;
+  font-weight: 500;
+  transition:
+    background-color var(--aurelex-transition),
+    border-color var(--aurelex-transition);
+}
+
+button.btn--style-primary {
+  background-color: #263b58;
+  border-color: #263b58;
+  color: #ffffff;
+}
+
+button.btn--style-primary:hover {
+  background-color: #334d70;
+  border-color: #334d70;
+  color: #ffffff;
+}
+
+button.btn--style-secondary {
+  border-color: #cbd5e1;
+  color: #263b58;
+}
+
+@media (max-width: 768px) {
+  form .field-type {
+    margin-bottom: 10px;
+  }
+
+  .field-type input:not(.rs__input):not([type='checkbox']):not([type='radio']):not([type='file']),
+  .field-type textarea,
+  .field-type select {
+    max-width: 100%;
+  }
+}
+
+/* =========================================
+   AURELEX LEGAL — BLOCK HEADER ALIGNMENT
+   ========================================= */
+
+.blocks-field__block-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.blocks-field__block-header > * {
+  align-self: center;
+}
+
+/* =========================================
+   AURELEX LEGAL — UPLOAD BUTTONS
+   ========================================= */
+
+.dropzone .upload__dropzoneContent__buttons
+  button.upload__createNewToggler,
+.dropzone .upload__dropzoneContent__buttons
+  button.upload__listToggler {
+  background: #172338 !important;
+  color: #ffffff !important;
+  border: 1px solid #172338 !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+}
+
+.dropzone .upload__dropzoneContent__buttons
+  button.upload__createNewToggler .btn__label,
+.dropzone .upload__dropzoneContent__buttons
+  button.upload__listToggler .btn__label {
+  color: #ffffff !important;
+}
+
+.dropzone .upload__dropzoneContent__buttons
+  button.upload__createNewToggler:hover,
+.dropzone .upload__dropzoneContent__buttons
+  button.upload__listToggler:hover {
+  background: #263b58 !important;
+  color: #ffffff !important;
+  border-color: #263b58 !important;
+}
+
+/* =========================================
+   PAYLOAD REACT SELECT — LAYOUT & COLORS
+   ========================================= */
+
+.rs__control {
+  box-sizing: border-box !important;
+  min-height: 34px !important;
+  height: auto !important;
+  padding: 0 !important;
+
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: none !important;
+}
+
+.rs__control:not(:has(.rs__value-container--is-multi)) {
+  height: 34px !important;
+  min-height: 34px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.rs__control:not(:has(.rs__value-container--is-multi))
+  .rs__value-container {
+  min-height: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  padding-left: 8px;
+  align-items: center !important;
+}
+
+.rs__single-value {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  line-height: 20px !important;
+}
+
+.rs__control:has(.rs__value-container--is-multi) {
+  height: auto !important;
+  min-height: 34px !important;
+  align-items: stretch !important;
+}
+
+.rs__value-container--is-multi {
+  height: auto !important;
+  min-height: 32px !important;
+  padding: 4px 6px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 4px !important;
+  overflow: visible !important;
+}
+
+.rs__multi-value {
+  flex: 0 0 auto !important;
+  max-width: 100% !important;
+  background-color: #9aabc4 !important;
+  border-radius: 4px;
+}
+
+.rs__indicators {
+  min-height: 32px !important;
+  height: auto !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+}
+
+.rs__single-value,
+.rs__multi-value__label {
+  color: #172338 !important;
+}
+
+.rs__option {
+  color: #26364e;
+}
+
+.rs__option--is-focused {
+  background-color: #edf1f6 !important;
+}
+
+.rs__option--is-selected {
+  background-color: #263b58 !important;
+  color: #ffffff !important;
+}
+
+.rs__control--is-focused {
+  border-color: #526b8b !important;
+  box-shadow: 0 0 0 2px rgb(82 107 139 / 15%) !important;
+}
+
+/* =========================================
+   PAYLOAD SLUG — UNLOCK BUTTON ALIGNMENT
+   ========================================= */
+
+#field-slug {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding-right: 90px !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#field-slug-generate {
+  position: absolute;
+  right: 56px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+#field-slug-lock {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+/* =========================================
+   AURELEX LEGAL — VERSIONS TAB
+   ========================================= */
+
+a.doc-tab[aria-label="Versions"] {
+  --bg-color: transparent;
+  --hover-bg: #172338;
+  --color: #172338;
+
+  color: #172338 !important;
+  background-color: transparent !important;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease;
+}
+
+a.doc-tab[aria-label="Versions"] .btn__content,
+a.doc-tab[aria-label="Versions"] .btn__label,
+a.doc-tab[aria-label="Versions"] .doc-tab__label {
+  color: inherit !important;
+}
+
+a.doc-tab[aria-label="Versions"] .pill-version-count {
+  color: #172338 !important;
+  background-color: #f1f5f9 !important;
+  border: 1px solid #d8dee7;
+  border-radius: 999px;
+}
+
+a.doc-tab[aria-label="Versions"]:hover,
+a.doc-tab[aria-label="Versions"]:focus-visible {
+  --bg-color: #172338;
+  --hover-bg: #172338;
+  --color: #ffffff;
+
+  color: #ffffff !important;
+  background-color: #172338 !important;
+  border-color: #b39455 !important;
+}
+
+a.doc-tab[aria-label="Versions"]:hover .btn__content,
+a.doc-tab[aria-label="Versions"]:hover .btn__label,
+a.doc-tab[aria-label="Versions"]:hover .doc-tab__label,
+a.doc-tab[aria-label="Versions"]:focus-visible .btn__content,
+a.doc-tab[aria-label="Versions"]:focus-visible .btn__label,
+a.doc-tab[aria-label="Versions"]:focus-visible .doc-tab__label {
+  color: #ffffff !important;
+}
+
+a.doc-tab[aria-label="Versions"]:hover .pill-version-count,
+a.doc-tab[aria-label="Versions"]:focus-visible .pill-version-count {
+  color: #172338 !important;
+  background-color: #b39455 !important;
+  border-color: #b39455 !important;
+}
+
+/* =========================================
+   AURELEX LEGAL — RICH TEXT EDITOR
+   Visual styling only; preserve content and layout
+   ========================================= */
+
+/* Editor outer surface */
+.field-type .rich-text-lexical,
+.field-type .lexical-editor {
+  color: #172338;
+  background-color: #ffffff;
+  border: 1px solid #d8dee7;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgb(23 35 56 / 4%);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+/* Gold accent when the editor receives focus */
+.field-type .rich-text-lexical:focus-within,
+.field-type .lexical-editor:focus-within {
+  border-color: #b39455;
+  box-shadow: 0 0 0 2px rgb(179 148 85 / 14%);
+}
+
+/* Rich-text toolbar */
+.field-type .rich-text-lexical .toolbar,
+.field-type .lexical-editor .toolbar,
+.field-type .rich-text-lexical [role="toolbar"],
+.field-type .lexical-editor [role="toolbar"] {
+  color: #172338;
+  background-color: #f1f5f9;
+  border-bottom: 1px solid #d8dee7;
+}
+
+/* Toolbar buttons */
+.field-type .rich-text-lexical [role="toolbar"] button,
+.field-type .lexical-editor [role="toolbar"] button,
+.field-type .rich-text-lexical .toolbar button,
+.field-type .lexical-editor .toolbar button {
+  color: #172338;
+  border-radius: 4px;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+/* Toolbar hover */
+.field-type .rich-text-lexical [role="toolbar"] button:hover,
+.field-type .lexical-editor [role="toolbar"] button:hover,
+.field-type .rich-text-lexical .toolbar button:hover,
+.field-type .lexical-editor .toolbar button:hover {
+  color: #ffffff;
+  background-color: #172338;
+}
+
+/* Active formatting buttons */
+.field-type .rich-text-lexical [role="toolbar"] button[aria-pressed="true"],
+.field-type .lexical-editor [role="toolbar"] button[aria-pressed="true"],
+.field-type .rich-text-lexical .toolbar button[aria-pressed="true"],
+.field-type .lexical-editor .toolbar button[aria-pressed="true"] {
+  color: #172338;
+  background-color: #eadfc7;
+  border-color: #b39455;
+}
+
+/* Editor text area */
+.field-type .rich-text-lexical [contenteditable="true"],
+.field-type .lexical-editor [contenteditable="true"] {
+  color: #172338;
+  background-color: #ffffff;
+  caret-color: #b39455;
+}
+
+/* Content typography */
+.field-type .rich-text-lexical [contenteditable="true"] p,
+.field-type .lexical-editor [contenteditable="true"] p,
+.field-type .rich-text-lexical [contenteditable="true"] li,
+.field-type .lexical-editor [contenteditable="true"] li {
+  color: #172338;
+}
+
+/* Editor placeholder */
+.field-type .rich-text-lexical [data-placeholder],
+.field-type .lexical-editor [data-placeholder] {
+  color: #94a3b8;
+}
+
+/* Editor links */
+.field-type .rich-text-lexical [contenteditable="true"] a,
+.field-type .lexical-editor [contenteditable="true"] a {
+  color: #8b682d;
+  text-underline-offset: 3px;
+}
+
+/* Keep keyboard focus visible */
+.field-type .rich-text-lexical button:focus-visible,
+.field-type .lexical-editor button:focus-visible {
+  outline: 2px solid #b39455;
+  outline-offset: 2px;
+}
+
+/* =========================================
+   AURELEX LEGAL — ARRAY POPUP HOVER FIX
+   ========================================= */
+
+.popup-button-list__button.array-actions__action,
+.popup-button-list__button.array-actions__add {
+  color: #172338 !important;
+  background-color: transparent !important;
+  border: 1px solid transparent;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+/* Keep the icon and its stroke readable */
+.popup-button-list__button.array-actions__action svg,
+.popup-button-list__button.array-actions__action svg path,
+.popup-button-list__button.array-actions__add svg,
+.popup-button-list__button.array-actions__add svg path {
+  color: inherit !important;
+  stroke: currentColor !important;
+}
+
+/* Navy background with white text and gold border */
+.popup-button-list__button.array-actions__action:hover,
+.popup-button-list__button.array-actions__add:hover,
+.popup-button-list__button.array-actions__action:focus-visible,
+.popup-button-list__button.array-actions__add:focus-visible {
+  color: #ffffff !important;
+  background-color: #172338 !important;
+  border-color: #b39455 !important;
+}
+
+/* Prevent nested text and icons from turning black */
+.popup-button-list__button.array-actions__action:hover *,
+.popup-button-list__button.array-actions__add:hover *,
+.popup-button-list__button.array-actions__action:focus-visible *,
+.popup-button-list__button.array-actions__add:focus-visible * {
+  color: #ffffff !important;
+}
+
+/* Preserve white plus icon on hover */
+.popup-button-list__button.array-actions__action:hover svg path,
+.popup-button-list__button.array-actions__add:hover svg path,
+.popup-button-list__button.array-actions__action:focus-visible svg path,
+.popup-button-list__button.array-actions__add:focus-visible svg path {
+  stroke: #ffffff !important;
+}
+
+/* AURELEX LEGAL — PAGE SECTION HEADINGS */
+
+.collapsible__header {
+  color: #263449 !important;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* AURELEX LEGAL — PAGE SECTION BORDERS */
+.collapsible {
+  border: 1px solid #d8dee7;
+  border-radius: 8px;
+}
+
+/* Users Collection Only: Email and Role layout */
+body:has(a[href*="/collections/users/"]) {
+  .collection-edit .document-fields__edit {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
+    align-items: start;
+    padding-top: 50px;
+  }
+
+  .collection-edit .auth-fields {
+    display: contents;
+  }
+
+  .collection-edit .login-fields {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .collection-edit .document-fields__fields {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .collection-edit .auth-fields__controls {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 0;
+  }
+
+  .collection-edit .auth-fields__controls #change-password,
+  .collection-edit .auth-fields__controls #force-unlock {
+    width: 280px;
+    justify-content: center;
+  }
+}
+
+/* Users Collection: Mobile layout */
+@media (max-width: 767px) {
+  body:has(a[href*="/collections/users/"]) {
+    .collection-edit .document-fields__edit {
+      grid-template-columns: minmax(0, 1fr);
+      padding-top: 16px;
+    }
+
+    .collection-edit .login-fields {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .collection-edit .document-fields__fields {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .collection-edit .auth-fields__controls {
+      grid-column: 1;
+      grid-row: 3;
+    }
+  }
+}
+
+/* Upload buttons: Select a file and Paste URL */
+button.btn.btn--icon-style-without-border.btn--size-small.btn--style-pill {
+  --bg-color: var(--aurelex-navy) !important;
+  --color: #ffffff !important;
+  --hover-bg: #263b58 !important;
+  --hover-color: #ffffff !important;
+
+  background-color: var(--aurelex-navy) !important;
+  color: #ffffff !important;
+}
+
+/* Rich text editor - white background */
+.rich-text-lexical .editor-container,
+.rich-text-lexical .editor-scroller,
+.rich-text-lexical .editor,
+.rich-text-lexical .ContentEditable__root {
+  background-color: #ffffff !important;
+  // padding-top: 10px;
+  padding: 5px;
+}
+
+/* Dark text for readability */
+.rich-text-lexical .ContentEditable__root {
+  color: #172338 !important;
+}
+
+/* Placeholder text */
+.rich-text-lexical .ContentEditable__root:empty::before {
+  color: #94a3b8;
+}
+
+/* Close icon - black */
+.icon--x .stroke {
+  stroke: #000000 !important;
+}
+
+/* Existing media selection links - improve text visibility only */
+button.default-cell__first-cell {
+  color: #172338 !important;
+}
+
+/* Version history - Previously Published pill */
+.version-pill-label .pill--style-light {
+  background-color: #f1f5f9 !important;
+  color: #172338 !important;
+  border: 1px solid #d8dee7 !important;
+}
+
+.version-pill-label .pill--style-light .pill__label,
+.version-pill-label .pill--style-light .pill__label span {
+  color: #172338 !important;
+}
+
+
+/* Calendar text color only */
+.react-datepicker {
+  .react-datepicker__day,
+  .react-datepicker__day-name,
+  .react-datepicker__current-month,
+  .react-datepicker__time-list-item {
+    color: #000000 !important;
+  }
+}
+
+
+/* Current date */
+.react-datepicker {
+  .react-datepicker__day--today {
+    background-color: #edf1f6 !important;
+    color: #000000 !important;
+  }
+
+  /* Selected date */
+  .react-datepicker__day--selected,
+  .react-datepicker__day--selected:hover {
+    background-color: #263b58 !important;
+    color: #ffffff !important;
+  }
+
+  /* Keyboard-focused date */
+  .react-datepicker__day--keyboard-selected:not(.react-datepicker__day--selected) {
+    background-color: #edf1f6 !important;
+    color: #000000 !important;
+  }
+}
+
+

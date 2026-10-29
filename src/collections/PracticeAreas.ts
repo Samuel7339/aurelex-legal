@@ -14,7 +14,7 @@ export const PracticeAreas: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug', 'updatedAt'],
-    group: 'Website Content',
+    group: 'People & Legal Services',
   },
 
   access: {

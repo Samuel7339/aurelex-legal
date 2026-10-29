@@ -17,6 +17,7 @@ import { ContactSubmissions } from './collections/ContactSubmissions'
 import { ConsultationBookings } from './collections/ConsultationBookings'
 import { GuidingPrinciples } from './collections/GuidingPrinciples'
 
+
 import { Header } from './globals/Header'
 import { Footer } from './globals/Footer'
 import { SiteSettings } from './globals/SiteSettings'
@@ -41,6 +42,26 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    meta: {
+      icons: [
+        {
+          rel: 'icon',
+          type: 'image/svg+xml',
+          url: '/aurelex-icon.svg',
+        },
+      ],
+    },
+    components: {
+      graphics: {
+        Logo: '/components/admin/AurelexLogo',
+        Icon: '/components/admin/AurelexIcon',
+      },
+      views: {
+        dashboard: {
+          Component: '/components/admin/DashboardShortcuts',
+        },
+      },
+    },
   },
 
   collections: [
@@ -54,7 +75,7 @@ export default buildConfig({
     Posts,
     ContactSubmissions,
     ConsultationBookings,
-    GuidingPrinciples
+    GuidingPrinciples,
   ],
 
   globals: [Header, Footer, SiteSettings],

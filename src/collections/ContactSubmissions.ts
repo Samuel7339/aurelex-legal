@@ -1,3 +1,4 @@
+
 import type { CollectionConfig } from 'payload'
 import { slugField } from 'payload'
 
@@ -9,45 +10,65 @@ export const ContactSubmissions: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'email', 'createdAt'],
-    group: 'Website Content',
+    group: 'Client Requests',
   },
 
   access: {
-    // Only Admin can view private enquiries.
     read: adminOnly,
-
-    // Website visitors can submit enquiries.
     create: () => true,
-
-    // Only Admin can modify or delete submissions.
     update: adminOnly,
     delete: adminOnly,
   },
 
   fields: [
     {
-      name: 'name',
-      type: 'text',
-      required: true,
+      type: 'row',
+      fields: [
+        {
+          name: 'name',
+          type: 'text',
+          required: true,
+          admin: {
+            width: '50%',
+          },
+        },
+        {
+          name: 'email',
+          type: 'email',
+          required: true,
+          admin: {
+            width: '50%',
+          },
+        },
+      ],
     },
     {
-      name: 'email',
-      type: 'email',
-      required: true,
-    },
-    {
-      name: 'phone',
-      type: 'text',
-    },
-    {
-      name: 'subject',
-      type: 'text',
-      required: true,
+      type: 'row',
+      fields: [
+        {
+          name: 'phone',
+          type: 'text',
+          admin: {
+            width: '50%',
+          },
+        },
+        {
+          name: 'subject',
+          type: 'text',
+          required: true,
+          admin: {
+            width: '50%',
+          },
+        },
+      ],
     },
     {
       name: 'message',
       type: 'textarea',
       required: true,
+      admin: {
+        width: '100%',
+      },
     },
   ],
 }

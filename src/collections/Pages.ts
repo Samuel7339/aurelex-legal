@@ -1,3 +1,4 @@
+
 import type { CollectionConfig } from 'payload'
 import { PageHero } from '@/blocks/PageHero'
 import { CTABlock } from '@/blocks/CTA'
@@ -39,9 +40,9 @@ export const Pages: CollectionConfig = {
     delete: adminOnly,
   },
 
-//   hooks: {
-//     afterChange: [revalidatePages],
-// },
+  // hooks: {
+  //   afterChange: [revalidatePages],
+  // },
 
   versions: {
     drafts: true,
@@ -49,28 +50,39 @@ export const Pages: CollectionConfig = {
 
   fields: [
     {
-      name: 'title',
-      type: 'text',
-      required: true,
+      type: 'row',
+      fields: [
+        {
+          name: 'title',
+          type: 'text',
+          required: true,
+          admin: {
+            width: '50%',
+          },
+        },
+        {
+          name: 'pageType',
+          type: 'select',
+          required: true,
+          options: [
+            { label: 'Home', value: 'home' },
+            { label: 'About', value: 'about' },
+            { label: 'Practice Areas', value: 'practice-areas' },
+            { label: 'Attorneys', value: 'attorneys' },
+            { label: 'Insights', value: 'insights' },
+            { label: 'Contact', value: 'contact' },
+            { label: 'Cases', value: 'cases' },
+            { label: 'Locations', value: 'locations' },
+          ],
+          admin: {
+            width: '50%',
+          },
+        },
+      ],
     },
     slugField({
       fieldToUse: 'title',
     }),
-    {
-      name: 'pageType',
-      type: 'select',
-      required: true,
-      options: [
-        { label: 'Home', value: 'home' },
-        { label: 'About', value: 'about' },
-        { label: 'Practice Areas', value: 'practice-areas' },
-        { label: 'Attorneys', value: 'attorneys' },
-        { label: 'Insights', value: 'insights' },
-        { label: 'Contact', value: 'contact' },
-        { label: 'Cases', value: 'cases' },
-        { label: 'Locations', value: 'locations' },
-      ],
-    },
     {
       name: 'description',
       type: 'textarea',
@@ -95,12 +107,10 @@ export const Pages: CollectionConfig = {
         GuidingPrinciplesBlock,
         AboutFirmBlock,
         InsightsSectionBlock,
-        PracticeAreasDirectoryBlock
-
+        PracticeAreasDirectoryBlock,
       ],
       admin: {
-        description:
-          'Configure reusable sections for this page.',
+        description: 'Configure reusable sections for this page.',
       },
     },
     {

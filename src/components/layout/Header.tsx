@@ -1,4 +1,3 @@
-
 import Link from 'next/link'
 import Image from 'next/image'
 import { getHeaderData, getSiteSettings } from '@/lib/payload/globals'
@@ -14,6 +13,28 @@ export default async function Header() {
     settings.logo && typeof settings.logo === 'object'
       ? settings.logo
       : null
+
+  const navigation =
+    header.navigation
+      ?.map((item) => {
+        const url =
+          item.destinationType === 'page'
+            ? item.selectedPage || undefined
+            : item.url
+
+        if (!url) return null
+
+        return {
+          ...item,
+          url,
+        }
+      })
+      .filter((item) => item !== null) ?? []
+
+  const ctaUrl =
+    header.ctaDestinationType === 'page'
+      ? header.ctaSelectedPage || header.ctaUrl
+      : header.ctaUrl
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/95 text-slate-900 shadow-sm shadow-slate-900/[0.03] backdrop-blur-md">
@@ -54,7 +75,7 @@ export default async function Header() {
           aria-label="Main navigation"
           className="hidden items-center gap-5 lg:flex xl:gap-7"
         >
-          {header.navigation?.map((item, index) => (
+          {navigation.map((item, index) => (
             <Link
               key={`${item.url}-${index}`}
               href={item.url}
@@ -64,9 +85,9 @@ export default async function Header() {
             </Link>
           ))}
 
-          {header.ctaLabel && header.ctaUrl && (
+          {header.ctaLabel && ctaUrl && (
             <Link
-              href={header.ctaUrl}
+              href={ctaUrl}
               className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-sm border border-amber-600 bg-amber-600 px-5 py-3 text-center text-sm font-semibold text-white shadow-sm shadow-amber-950/10 transition-all duration-200 hover:border-amber-700 hover:bg-amber-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
             >
               {header.ctaLabel}
@@ -76,9 +97,9 @@ export default async function Header() {
 
         {/* Mobile navigation */}
         <MobileNavigation
-          navigation={header.navigation ?? []}
+          navigation={navigation}
           ctaLabel={header.ctaLabel}
-          ctaUrl={header.ctaUrl}
+          ctaUrl={ctaUrl || undefined}
         />
       </div>
     </header>

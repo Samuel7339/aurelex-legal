@@ -8,7 +8,7 @@ export const Media: CollectionConfig = {
   admin: {
     useAsTitle: 'alt',
     defaultColumns: ['alt', 'updatedAt'],
-    group: 'Website Content',
+    group: 'Articles & Client Resources',
   },
 
   access: {

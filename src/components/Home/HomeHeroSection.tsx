@@ -11,8 +11,12 @@ type HeroSlide = {
   description?: string | null
   primaryButtonLabel?: string | null
   primaryButtonUrl?: string | null
+  primaryButtonDestinationType?: 'page' | 'custom' | null
+  primaryButtonSelectedPage?: string | null
   secondaryButtonLabel?: string | null
   secondaryButtonUrl?: string | null
+  secondaryButtonDestinationType?: 'page' | 'custom' | null
+  secondaryButtonSelectedPage?: string | null
   image?: string | Media | null
 }
 
@@ -27,17 +31,27 @@ export default function HomeHeroSection({
 }: HomeHeroSectionProps) {
   const [activeSlide, setActiveSlide] = useState(0)
   const [isChanging, setIsChanging] = useState(false)
-  
+
   const currentSlide = slides[activeSlide] ?? slides[0]
-   
+
   const heroImage =
     currentSlide?.image && typeof currentSlide.image === 'object'
       ? currentSlide.image
       : null
-  
+
+  const primaryButtonUrl =
+    currentSlide?.primaryButtonDestinationType === 'page'
+      ? currentSlide.primaryButtonSelectedPage || undefined
+      : currentSlide?.primaryButtonUrl || undefined
+
+  const secondaryButtonUrl =
+    currentSlide?.secondaryButtonDestinationType === 'page'
+      ? currentSlide.secondaryButtonSelectedPage || undefined
+      : currentSlide?.secondaryButtonUrl || undefined
+
   const changeSlide = (direction: 'previous' | 'next') => {
     if (isChanging || slides.length <= 1) return
-  
+
     setIsChanging(true)
 
     setTimeout(() => {
@@ -50,19 +64,19 @@ export default function HomeHeroSection({
             ? 0
             : current + 1,
       )
-  
+
       setIsChanging(false)
     }, 180)
   }
-  
+
   const previousSlide = () => {
     changeSlide('previous')
   }
-  
+
   const nextSlide = () => {
     changeSlide('next')
   }
-      
+
   return (
     <section
       id="home"
@@ -92,20 +106,23 @@ export default function HomeHeroSection({
             </p>
 
             <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-4">
-              <a
-                href={currentSlide?.primaryButtonUrl || '#contact'}
-                className="inline-flex min-h-12 items-center justify-center rounded-sm border border-amber-500 bg-amber-500 px-6 py-3 text-sm font-semibold text-[#10233f] shadow-md shadow-black/10 transition-all duration-300 hover:-translate-y-0.5 hover:border-amber-300 hover:bg-amber-300 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#10233f]"
-              >
-                {currentSlide?.primaryButtonLabel ||
-                  'Schedule a Consultation'}
-              </a>
+              {currentSlide?.primaryButtonLabel && primaryButtonUrl && (
+                <a
+                  href={primaryButtonUrl}
+                  className="inline-flex min-h-12 items-center justify-center rounded-sm border border-amber-500 bg-amber-500 px-6 py-3 text-sm font-semibold text-[#10233f] shadow-md shadow-black/10 transition-all duration-300 hover:-translate-y-0.5 hover:border-amber-300 hover:bg-amber-300 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#10233f]"
+                >
+                  {currentSlide.primaryButtonLabel}
+                </a>
+              )}
 
-              <a
-                href={currentSlide?.secondaryButtonUrl || '#about'}
-                className="inline-flex min-h-12 items-center justify-center rounded-sm border border-white/30 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:border-amber-300/80 hover:bg-white/[0.06] hover:text-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#10233f]"
-              >
-                {currentSlide?.secondaryButtonLabel || 'Learn More'}
-              </a>
+              {currentSlide?.secondaryButtonLabel && secondaryButtonUrl && (
+                <a
+                  href={secondaryButtonUrl}
+                  className="inline-flex min-h-12 items-center justify-center rounded-sm border border-white/30 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:border-amber-300/80 hover:bg-white/[0.06] hover:text-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#10233f]"
+                >
+                  {currentSlide.secondaryButtonLabel}
+                </a>
+              )}
             </div>
           </div>
 

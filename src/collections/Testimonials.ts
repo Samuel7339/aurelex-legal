@@ -14,7 +14,7 @@ export const Testimonials: CollectionConfig = {
   admin: {
     useAsTitle: 'clientName',
     defaultColumns: ['clientName', 'updatedAt'],
-    group: 'Website Content',
+    group: 'Articles & Client Resources',
   },
 
   access: {

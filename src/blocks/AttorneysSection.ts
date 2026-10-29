@@ -1,5 +1,15 @@
 import type { Block } from 'payload'
 
+const pageOptions = [
+  { label: 'Home', value: '/' },
+  { label: 'About', value: '/about' },
+  { label: 'Practice Areas', value: '/practice-areas' },
+  { label: 'Our Attorneys', value: '/our-attorneys' },
+  { label: 'Insights', value: '/articles' },
+  { label: 'Contact', value: '/contact' },
+  { label: 'Book a Consultation', value: '/book-consultant' },
+]
+
 export const AttorneysSectionBlock: Block = {
   slug: 'attorneysSection',
   interfaceName: 'AttorneysSectionBlock',
@@ -24,14 +34,8 @@ export const AttorneysSectionBlock: Block = {
       label: 'Attorney Display Mode',
       defaultValue: 'selected',
       options: [
-        {
-          label: 'Selected Attorneys',
-          value: 'selected',
-        },
-        {
-          label: 'All Attorneys',
-          value: 'all',
-        },
+        { label: 'Selected Attorneys', value: 'selected' },
+        { label: 'All Attorneys', value: 'all' },
       ],
       admin: {
         description:
@@ -50,14 +54,51 @@ export const AttorneysSectionBlock: Block = {
       },
     },
     {
-      name: 'viewAllLabel',
-      type: 'text',
-      defaultValue: 'Meet All Attorneys',
+      type: 'row',
+      fields: [
+        {
+          name: 'viewAllLabel',
+          type: 'text',
+          defaultValue: 'Meet All Attorneys',
+          label: 'Button Label',
+          admin: {
+            width: '50%',
+          },
+        },
+        {
+          name: 'viewAllDestinationType',
+          type: 'select',
+          label: 'Button Destination',
+          defaultValue: 'custom',
+          options: [
+            { label: 'Choose an Existing Page', value: 'page' },
+            { label: 'Enter a Custom URL', value: 'custom' },
+          ],
+          admin: {
+            width: '50%',
+          },
+        },
+      ],
+    },
+    {
+      name: 'selectedViewAllPage',
+      type: 'select',
+      label: 'Select Page',
+      options: pageOptions,
+      admin: {
+        condition: (_, siblingData) =>
+          siblingData?.viewAllDestinationType === 'page',
+      },
     },
     {
       name: 'viewAllUrl',
       type: 'text',
+      label: 'Custom Button URL',
       defaultValue: '/our-attorneys',
+      admin: {
+        condition: (_, siblingData) =>
+          siblingData?.viewAllDestinationType === 'custom',
+      },
     },
   ],
 }

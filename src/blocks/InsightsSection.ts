@@ -1,4 +1,3 @@
-
 import type { Block } from 'payload'
 
 export const InsightsSectionBlock: Block = {
@@ -52,14 +51,25 @@ export const InsightsSectionBlock: Block = {
       },
     },
     {
-      name: 'viewAllLabel',
-      type: 'text',
-      defaultValue: 'View All Insights',
-    },
-    {
-      name: 'viewAllUrl',
-      type: 'text',
-      defaultValue: '/articles',
+      type: 'row',
+      fields: [
+        {
+          name: 'viewAllLabel',
+          type: 'text',
+          defaultValue: 'View All Insights',
+          admin: {
+            width: '50%',
+          },
+        },
+        {
+          name: 'viewAllUrl',
+          type: 'text',
+          defaultValue: '/articles',
+          admin: {
+            width: '50%',
+          },
+        },
+      ],
     },
   ],
 }

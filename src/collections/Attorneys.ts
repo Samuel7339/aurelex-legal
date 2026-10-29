@@ -1,3 +1,4 @@
+
 import type { CollectionConfig } from 'payload'
 import { slugField } from 'payload'
 
@@ -14,7 +15,7 @@ export const Attorneys: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'designation', 'updatedAt'],
-    group: 'Website Content',
+    group: 'People & Legal Services',
   },
 
   access: {
@@ -30,18 +31,29 @@ export const Attorneys: CollectionConfig = {
 
   fields: [
     {
-      name: 'name',
-      type: 'text',
-      required: true,
+      type: 'row',
+      fields: [
+        {
+          name: 'name',
+          type: 'text',
+          required: true,
+          admin: {
+            width: '50%',
+          },
+        },
+        {
+          name: 'designation',
+          type: 'text',
+          required: true,
+          admin: {
+            width: '50%',
+          },
+        },
+      ],
     },
     slugField({
       fieldToUse: 'name',
     }),
-    {
-      name: 'designation',
-      type: 'text',
-      required: true,
-    },
     {
       name: 'photo',
       type: 'upload',
@@ -73,45 +85,53 @@ export const Attorneys: CollectionConfig = {
       hasMany: true,
     },
     {
-      name: 'email',
-      type: 'email',
+      type: 'row',
+      fields: [
+        {
+          name: 'email',
+          type: 'email',
+          admin: {
+            width: '50%',
+          },
+        },
+        {
+          name: 'sortOrder',
+          type: 'number',
+          defaultValue: 0,
+          admin: {
+            width: '50%',
+          },
+        },
+      ],
     },
     {
-      name: 'sortOrder',
-      type: 'number',
-      defaultValue: 0,
+      name: 'seo',
+      type: 'group',
+      label: 'SEO Settings',
+      fields: [
+        {
+          name: 'title',
+          type: 'text',
+          admin: {
+            description: 'Optional SEO title for this attorney profile.',
+          },
+        },
+        {
+          name: 'description',
+          type: 'textarea',
+          admin: {
+            description: 'Optional SEO description for search engines.',
+          },
+        },
+        {
+          name: 'socialImage',
+          type: 'upload',
+          relationTo: 'media',
+          admin: {
+            description: 'Optional image for social media sharing.',
+          },
+        },
+      ],
     },
-
-    
-{
-  name: 'seo',
-  type: 'group',
-  label: 'SEO Settings',
-  fields: [
-    {
-      name: 'title',
-      type: 'text',
-      admin: {
-        description: 'Optional SEO title for this attorney profile.',
-      },
-    },
-    {
-      name: 'description',
-      type: 'textarea',
-      admin: {
-        description: 'Optional SEO description for search engines.',
-      },
-    },
-    {
-      name: 'socialImage',
-      type: 'upload',
-      relationTo: 'media',
-      admin: {
-        description: 'Optional image for social media sharing.',
-      },
-    },
-  ],
-},
-
   ],
 }

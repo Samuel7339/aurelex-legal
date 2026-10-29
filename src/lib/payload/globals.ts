@@ -5,7 +5,7 @@ export async function getHeaderData() {
 
     return payload.findGlobal({
         slug: 'header',
-        depth: 0
+        depth: 1
     })
 }
 
@@ -14,7 +14,7 @@ export async function getFooterData() {
 
     return payload.findGlobal({
         slug: 'footer',
-        depth: 0,
+        depth: 1,
     })
 }
 

@@ -1,37 +1,132 @@
-
 import Link from 'next/link'
-import { getFooterData } from '@/lib/payload/globals'
-import { getPayloadClient } from '@/lib/payload/getPayloadClient'
-import { getAllPracticeAreas } from '@/lib/payload/practiceAreas'
-import { getSiteSettings } from '@/lib/payload/globals'
+import { getFooterData, getSiteSettings } from '@/lib/payload/globals'
+
+type FooterEntry = {
+  id?: string | number
+  title?: string | null
+  name?: string | null
+  slug?: string | null
+}
+
+type CollectionType = 'practice-areas' | 'attorneys' | 'posts'
+
+const collectionConfig = {
+  'practice-areas': {
+    field: 'practiceAreas',
+    heading: 'Practice Areas',
+    basePath: '/practice-areas',
+  },
+  attorneys: {
+    field: 'attorneys',
+    heading: 'Our Attorneys',
+    basePath: '/our-attorneys',
+  },
+  posts: {
+    field: 'posts',
+    heading: 'Insights',
+    basePath: '/articles',
+  },
+} as const
+
+function isPopulatedEntry(value: unknown): value is FooterEntry {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'slug' in value
+  )
+}
+
+function getCollectionEntries(section: {
+  contentType?: CollectionType | null
+  practiceAreas?: unknown[] | null
+  attorneys?: unknown[] | null
+  posts?: unknown[] | null
+}): FooterEntry[] {
+  const config = section.contentType
+    ? collectionConfig[section.contentType]
+    : undefined
+
+  if (!config) return []
+
+  const entries = section[config.field]
+
+  return Array.isArray(entries)
+    ? entries.filter(isPopulatedEntry)
+    : []
+}
 
 export default async function Footer() {
-  const [footer, payload, practiceAreas, settings] = await Promise.all([
+  const [footer, settings] = await Promise.all([
     getFooterData(),
-    getPayloadClient(),
-    getAllPracticeAreas(),
     getSiteSettings(),
   ])
 
-  // const practiceAreas = await payload.find({
-  //   collection: 'practice-areas',
-  //   where: {
-  //     // Only show published practice areas.
-  //     _status: {
-  //       equals: 'published',
-  //     },
-  //   },
-  //   limit: 8,
-  //   sort: 'title',
-  //   depth: 0,
-  // })
+  const quickLinks =
+    footer.quickLinks?.flatMap((item) => {
+      const url =
+        item.destinationType === 'page'
+          ? item.selectedPage || undefined
+          : item.url || undefined
+
+      return url ? [{ ...item, url }] : []
+    }) ?? []
+
+  const collectionSections =
+    footer.collectionLinks?.flatMap((section) => {
+      const contentType = section.contentType as
+        | CollectionType
+        | undefined
+
+      const config = contentType
+        ? collectionConfig[contentType]
+        : undefined
+
+      if (!config) return []
+
+      const links = getCollectionEntries(section).flatMap((entry) => {
+        const label = entry.title || entry.name
+
+        if (!label || !entry.slug) return []
+
+        return [
+          {
+            id: entry.id ?? entry.slug,
+            label,
+            url: `${config.basePath}/${entry.slug}`,
+          },
+        ]
+      })
+
+      const viewAllUrl =
+  section.viewAllDestinationType === 'page'
+    ? section.viewAllSelectedPage
+    : section.viewAllCustomUrl
+
+      const showViewAll =
+        section.showViewAll === true &&
+        Boolean(section.viewAllLabel?.trim()) &&
+        Boolean(viewAllUrl?.trim())
+
+      if (links.length === 0 && !showViewAll) return []
+
+      return [
+        {
+          heading: config.heading,
+          links,
+          viewAllLabel: showViewAll
+            ? section.viewAllLabel
+            : undefined,
+          viewAllUrl: showViewAll ? viewAllUrl : undefined,
+        },
+      ]
+    }) ?? []
 
   return (
     <footer className="relative overflow-hidden bg-gradient-to-br from-[#10233f] via-[#132b49] to-[#0b192d] text-white">
       <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-16 lg:px-10 lg:py-20">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-x-12 lg:grid-cols-4 lg:gap-x-10 lg:gap-y-12">
+        <div className="grid grid-cols-1 gap-x-7 gap-y-10 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(160px,1fr))] lg:gap-x-6 lg:gap-y-12">
           {/* Firm information */}
-          <div>
+          <div className="min-w-0">
             <Link
               href="/"
               className="inline-block text-2xl font-semibold tracking-tight text-white transition-colors duration-300 hover:text-amber-300 sm:text-[26px]"
@@ -47,8 +142,8 @@ export default async function Footer() {
             </p>
           </div>
 
-          {/* Quick links */}
-          <div className="sm:pl-4 lg:pl-6">
+          {/* Quick Links */}
+          <div className="min-w-0">
             <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-white sm:text-[13px]">
               Quick Links
             </h2>
@@ -56,7 +151,7 @@ export default async function Footer() {
             <div className="mt-4 h-px w-9 bg-amber-400/80" />
 
             <ul className="mt-5 space-y-3.5">
-              {(footer.quickLinks ?? []).map((item, index) => (
+              {quickLinks.map((item, index) => (
                 <li key={`${item.url}-${index}`}>
                   <Link
                     href={item.url}
@@ -68,39 +163,47 @@ export default async function Footer() {
               ))}
             </ul>
           </div>
-        
-          {/* Practice Areas */}
-          <div>
-            <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-white sm:text-[13px]">
-              Practice Areas
-            </h2>
 
-            <div className="mt-4 h-px w-9 bg-amber-400/80" />
+          {/* Collection sections */}
+          {collectionSections.map((section, index) => (
+            <div
+              key={`${section.heading}-${index}`}
+              className="min-w-0"
+            >
+              <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-white sm:text-[13px]">
+                {section.heading}
+              </h2>
 
-            <ul className="mt-5 space-y-3.5">
-              {practiceAreas.slice(0, 5).map((area) => (
-                <li key={area.id}>
-                  <Link
-                    href={`/practice-areas/${area.slug}`}
-                    className="inline-flex text-sm leading-6 text-slate-300 transition-colors duration-200 hover:text-amber-300"
-                  >
-                    {area.title}
-                  </Link>
-                </li>
-              ))}
+              <div className="mt-4 h-px w-9 bg-amber-400/80" />
 
-              <Link
-                href="/practice-areas"
-                className="inline-flex text-sm leading-6 text-slate-300 transition-colors duration-200 hover:text-amber-300"
-              >
-                View All Practice Areas
+              <ul className="mt-5 space-y-3.5">
+                {section.links.map((item) => (
+                  <li key={item.id}>
+                    <Link
+                      href={item.url}
+                      className="inline-flex text-sm leading-6 text-slate-300 transition-colors duration-200 hover:text-amber-300"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
 
-              </Link>
-            </ul>
-          </div>
+                {section.viewAllLabel && section.viewAllUrl && (
+                  <li>
+                    <Link
+                      href={section.viewAllUrl}
+                      className="inline-flex text-sm leading-6 text-slate-300 transition-colors duration-200 hover:text-amber-300"
+                    >
+                      {section.viewAllLabel}
+                    </Link>
+                  </li>
+                )}
+              </ul>
+            </div>
+          ))}
 
           {/* Contact */}
-          <div>
+          <div className="min-w-0">
             <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-white sm:text-[13px]">
               Contact
             </h2>
