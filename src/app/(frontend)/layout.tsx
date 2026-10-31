@@ -10,7 +10,7 @@ import Breadcrumbs from '@/components/layout/Breadcrumbs'
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings()
 
-  const firmName = settings.firmName || ' Aurelex Legal'
+  const firmName = settings.firmName || 'Aurelex Legal'
 
   const favicon =
     settings.favicon && typeof settings.favicon === 'object'
@@ -20,15 +20,14 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: {
       default:
-        settings.defaultSEO?.title ||
-        `${firmName} | Legal Services`,
-      template: `%s | ${firmName}`,
+        settings.defaultSEO?.title || `${firmName} | Legal Services`,
+      template: `%s`,
     },
     description:
       settings.defaultSEO?.description ||
       'Trusted legal guidance and strategic legal solutions for what matters most.',
 
-      icons: favicon?.url
+    icons: favicon?.url
       ? {
           icon: favicon.url,
         }
@@ -45,7 +44,7 @@ export default async function RootLayout(props: {
     <html lang="en">
       <body>
         <Header />
-        <Breadcrumbs/>
+        <Breadcrumbs />
         <main>{children}</main>
         <Footer />
       </body>

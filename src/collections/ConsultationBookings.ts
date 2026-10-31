@@ -28,6 +28,7 @@ export const ConsultationBookings: CollectionConfig = {
           required: true,
           admin: {
             width: '50%',
+            readOnly:true,
           },
         },
         {
@@ -36,6 +37,7 @@ export const ConsultationBookings: CollectionConfig = {
           required: true,
           admin: {
             width: '50%',
+            readOnly:true,
           },
         },
       ],
@@ -50,6 +52,7 @@ export const ConsultationBookings: CollectionConfig = {
           required: true,
           admin: {
             width: '50%',
+            readOnly:true,
           },
         },
         {
@@ -58,6 +61,7 @@ export const ConsultationBookings: CollectionConfig = {
           relationTo: 'practice-areas',
           admin: {
             width: '50%',
+            readOnly:true,
           },
         },
       ],
@@ -71,6 +75,8 @@ export const ConsultationBookings: CollectionConfig = {
           type: 'date',
           admin: {
             width: '50%',
+            readOnly:true,
+            
           },
         },
         {
@@ -98,6 +104,7 @@ export const ConsultationBookings: CollectionConfig = {
       type: 'textarea',
       admin: {
         width: '100%',
+        readOnly:true,
       },
     },
   ],

@@ -1,4 +1,7 @@
 
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
 import type { Post } from '@/payload-types'
 import ArticleCard from '@/components/insights/ArticleCard'
@@ -9,7 +12,10 @@ type ArticlesListSectionProps = {
   description?: string
   viewAllLabel?: string
   viewAllUrl?: string
+  enableLoadMore?: boolean
 }
+
+const ITEMS_PER_LOAD = 3
 
 export default function ArticlesListSection({
   posts,
@@ -17,7 +23,14 @@ export default function ArticlesListSection({
   description = 'Read our latest articles and explore legal topics, updates, and practical guidance.',
   viewAllLabel = 'View All Insights',
   viewAllUrl = '/insights',
+  enableLoadMore = false,
 }: ArticlesListSectionProps) {
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_LOAD)
+
+  const visiblePosts = enableLoadMore
+    ? posts.slice(0, visibleCount)
+    : posts
+
   return (
     <section className="bg-stone-50/70 py-16 sm:py-20 lg:py-24">
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
@@ -56,11 +69,27 @@ export default function ArticlesListSection({
         </div>
 
         {posts.length > 0 ? (
-          <div className="grid gap-6 sm:grid-cols-2 sm:gap-7 lg:grid-cols-3 lg:gap-8">
-            {posts.map((post) => (
-              <ArticleCard key={post.id} post={post} />
-            ))}
-          </div>
+          <>
+            <div className="grid gap-6 sm:grid-cols-2 sm:gap-7 lg:grid-cols-3 lg:gap-8">
+              {visiblePosts.map((post) => (
+                <ArticleCard key={post.id} post={post} />
+              ))}
+            </div>
+
+            {enableLoadMore && visibleCount < posts.length ? (
+              <div className="mt-12 text-center">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setVisibleCount((current) => current + ITEMS_PER_LOAD)
+                  }
+                  className="rounded-md border border-amber-700/70 bg-amber-700/5 px-7 py-3.5 text-sm font-semibold text-amber-800 transition-all duration-300 hover:border-amber-800 hover:bg-amber-800 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
+                >
+                  Load More
+                </button>
+              </div>
+            ) : null}
+          </>
         ) : (
           <div className="rounded-lg border border-slate-200 bg-white px-6 py-16 text-center shadow-sm sm:py-20">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-700">

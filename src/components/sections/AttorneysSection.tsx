@@ -1,3 +1,7 @@
+
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
 import AttorneyCard from '@/components/attorneys/AttorneyCard'
 
@@ -20,15 +24,25 @@ type AttorneysSectionProps = {
   description?: string
   viewAllLabel?: string
   viewAllUrl?: string
+  enableLoadMore?: boolean
 }
+
+const ITEMS_PER_LOAD = 3
 
 export default function AttorneysSection({
   attorneys,
   heading = 'Meet Our Attorneys',
   description = 'Experienced legal professionals committed to protecting your interests.',
-  viewAllLabel = 'Meet All Attorneys',
-  viewAllUrl = '/attorneys',
+  viewAllLabel ,
+  viewAllUrl ,
+  enableLoadMore = false,
 }: AttorneysSectionProps) {
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_LOAD)
+
+  const visibleAttorneys = enableLoadMore
+    ? attorneys.slice(0, visibleCount)
+    : attorneys
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 py-16 text-white sm:py-20 lg:py-24">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(180,140,60,0.10),transparent_55%)]" />
@@ -56,7 +70,7 @@ export default function AttorneysSection({
 
         {attorneys.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 sm:gap-7 lg:grid-cols-3 lg:gap-8">
-            {attorneys.map((attorney) => (
+            {visibleAttorneys.map((attorney) => (
               <AttorneyCard key={attorney.id} attorney={attorney} />
             ))}
           </div>
@@ -65,6 +79,20 @@ export default function AttorneysSection({
             Our attorney profiles will be available soon.
           </p>
         )}
+
+        {enableLoadMore && visibleCount < attorneys.length ? (
+          <div className="mt-12 text-center sm:mt-16">
+            <button
+              type="button"
+              onClick={() =>
+                setVisibleCount((current) => current + ITEMS_PER_LOAD)
+              }
+              className="rounded-md border border-amber-400/70 bg-amber-400/5 px-7 py-3.5 text-sm font-semibold text-amber-300 transition-all duration-300 hover:border-amber-300 hover:bg-amber-400 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+            >
+              Load More
+            </button>
+          </div>
+        ) : null}
 
         {viewAllLabel && viewAllUrl ? (
           <div className="mt-12 text-center sm:mt-16">
@@ -86,4 +114,3 @@ export default function AttorneysSection({
     </section>
   )
 }
-

@@ -1,4 +1,7 @@
 
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
 import type { PracticeArea } from '@/payload-types'
 
@@ -6,9 +9,15 @@ type PracticeAreasDirectoryProps = {
   practiceAreas: PracticeArea[]
 }
 
+const ITEMS_PER_LOAD = 3
+
 export default function PracticeAreasDirectory({
   practiceAreas,
 }: PracticeAreasDirectoryProps) {
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_LOAD)
+
+  const visiblePracticeAreas = practiceAreas.slice(0, visibleCount)
+
   return (
     <section className="py-14 sm:py-20">
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
@@ -29,53 +38,70 @@ export default function PracticeAreasDirectory({
         </div>
 
         {practiceAreas.length > 0 ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {practiceAreas.map((area) => (
-              <article
-                key={area.id}
-                className="group rounded-lg border border-slate-200/80 bg-white p-6 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:border-amber-400 hover:shadow-lg motion-reduce:transform-none motion-reduce:transition-none sm:p-8"
-              >
-                <div className="flex size-12 items-center justify-center rounded-lg bg-amber-50 font-serif text-2xl text-amber-700 transition-colors duration-300 group-hover:bg-amber-100">
-                  §
-                </div>
-
-                <h3 className="mt-6 font-serif text-xl font-semibold text-slate-900 transition-colors duration-300 group-hover:text-amber-700 sm:text-2xl">
-                  {area.title}
-                </h3>
-
-                <p className="mt-3 text-sm leading-7 text-slate-600">
-                  {area.shortDescription}
-                </p>
-
-                {area.services && area.services.length > 0 && (
-                  <ul className="mt-5 space-y-2 border-t border-slate-200 pt-5">
-                    {area.services.map((item, index) => (
-                      <li
-                        key={item.id ?? `${area.id}-${index}`}
-                        className="flex items-start gap-2 text-sm text-slate-600"
-                      >
-                        <span className="mt-0.5 text-amber-600">✓</span>
-                        <span>{item.service}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-
-                <Link
-                  href={`/practice-areas/${area.slug}`}
-                  className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-amber-700 transition-colors duration-300 hover:text-amber-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
+          <>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {visiblePracticeAreas.map((area) => (
+                <article
+                  key={area.id}
+                  className="group rounded-lg border border-slate-200/80 bg-white p-6 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:border-amber-400 hover:shadow-lg motion-reduce:transform-none motion-reduce:transition-none sm:p-8"
                 >
-                  Explore Practice Area
-                  <span
-                    aria-hidden="true"
-                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  <div className="flex size-12 items-center justify-center rounded-lg bg-amber-50 font-serif text-2xl text-amber-700 transition-colors duration-300 group-hover:bg-amber-100">
+                    §
+                  </div>
+
+                  <h3 className="mt-6 font-serif text-xl font-semibold text-slate-900 transition-colors duration-300 group-hover:text-amber-700 sm:text-2xl">
+                    {area.title}
+                  </h3>
+
+                  <p className="mt-3 text-sm leading-7 text-slate-600">
+                    {area.shortDescription}
+                  </p>
+
+                  {area.services && area.services.length > 0 && (
+                    <ul className="mt-5 space-y-2 border-t border-slate-200 pt-5">
+                      {area.services.map((item, index) => (
+                        <li
+                          key={item.id ?? `${area.id}-${index}`}
+                          className="flex items-start gap-2 text-sm text-slate-600"
+                        >
+                          <span className="mt-0.5 text-amber-600">✓</span>
+                          <span>{item.service}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  <Link
+                    href={`/practice-areas/${area.slug}`}
+                    className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-amber-700 transition-colors duration-300 hover:text-amber-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
                   >
-                    →
-                  </span>
-                </Link>
-              </article>
-            ))}
-          </div>
+                    Explore Practice Area
+                    <span
+                      aria-hidden="true"
+                      className="transition-transform duration-300 group-hover:translate-x-1"
+                    >
+                      →
+                    </span>
+                  </Link>
+                </article>
+              ))}
+            </div>
+
+            {visibleCount < practiceAreas.length && (
+              <div className="mt-12 flex justify-center">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setVisibleCount((count) => count + ITEMS_PER_LOAD)
+                  }
+                  className="inline-flex items-center gap-2 rounded-lg border border-amber-700 px-7 py-3 text-sm font-semibold text-amber-700 transition-all duration-300 hover:bg-amber-700 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
+                >
+                  See More
+                  {/* <span aria-hidden="true">↓</span> */}
+                </button>
+              </div>
+            )}
+          </>
         ) : (
           <div className="border border-slate-200 bg-slate-50 px-6 py-12 text-center">
             <h3 className="font-serif text-xl font-semibold text-slate-900">

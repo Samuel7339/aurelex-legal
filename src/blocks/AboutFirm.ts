@@ -1,15 +1,6 @@
 
 import type { Block } from 'payload'
-
-const pageOptions = [
-  { label: 'Home', value: '/' },
-  { label: 'About', value: '/about' },
-  { label: 'Practice Areas', value: '/practice-areas' },
-  { label: 'Our Attorneys', value: '/our-attorneys' },
-  { label: 'Insights', value: '/articles' },
-  { label: 'Contact', value: '/contact' },
-  { label: 'Book a Consultation', value: '/book-consultant' },
-]
+import { routeOptions } from '../generated/routeOptions'
 
 export const AboutFirmBlock: Block = {
   slug: 'aboutFirm',
@@ -86,7 +77,7 @@ export const AboutFirmBlock: Block = {
       name: 'selectedButtonPage',
       type: 'select',
       label: 'Select Page',
-      options: pageOptions,
+      options: [...routeOptions],
       admin: {
         condition: (_, siblingData) =>
           Boolean(siblingData?.buttonLabel) &&

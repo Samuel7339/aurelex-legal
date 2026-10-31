@@ -1,8 +1,11 @@
 
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { RichText } from '@payloadcms/richtext-lexical/react'
+
+import { handleRedirect } from '@/lib/payload/redirects'
 
 import { getPostBySlug } from '@/lib/payload/posts'
 import CTASection from '@/components/layout/CTASection'
@@ -14,13 +17,15 @@ type ArticlePageProps = {
     }>
 }
 
-export async function generateMetadata({ params }: ArticlePageProps) {
+export async function generateMetadata({
+    params,
+}: ArticlePageProps): Promise<Metadata> {
     const { slug } = await params
     const article = await getPostBySlug(slug)
 
     if (!article) {
         return {
-            title: 'Article Not Found | Aurelex',
+            title: 'Article Not Found | Aurelex Legal',
             robots: {
                 index: false,
                 follow: false,
@@ -28,23 +33,35 @@ export async function generateMetadata({ params }: ArticlePageProps) {
         }
     }
 
+    const title =
+        article.meta?.title ||
+        `${article.title} | Aurelex Legal`
+
     const description =
+        article.meta?.description ||
         article.excerpt ||
         `Read ${article.title} from Aurelex's legal insights.`
 
-    const image =
-        typeof article.featuredImage === 'object' &&
-            article.featuredImage !== null
-            ? (article.featuredImage as Media)
+    const pluginImage =
+        typeof article.meta?.image === 'object' &&
+        article.meta.image !== null
+            ? article.meta.image
             : null
 
+    const image =
+        pluginImage ||
+        (typeof article.featuredImage === 'object' &&
+        article.featuredImage !== null
+            ? (article.featuredImage as Media)
+            : null)
+
     return {
-        title: `${article.title} | Aurelex Legal`,
+        title: { absolute: title },
         description,
         openGraph: {
-            title: article.title,
+            title,
             description,
-            type: 'article' as const,
+            type: 'article',
             ...(article.publishedAt
                 ? { publishedTime: article.publishedAt }
                 : {}),
@@ -69,12 +86,13 @@ export default async function ArticleDetailPage({
     const article = await getPostBySlug(slug)
 
     if (!article) {
-        notFound()
-    }
+    await handleRedirect(`/articles/${slug}`)
+    notFound()
+}
 
     const image =
         typeof article.featuredImage === 'object' &&
-            article.featuredImage !== null
+        article.featuredImage !== null
             ? (article.featuredImage as Media)
             : null
 

@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -5,10 +6,11 @@ import { notFound } from 'next/navigation'
 import { getAttorneyBySlug } from '@/lib/payload/attorneys'
 import RichText from '@/components/RichText/RichText'
 
+import { handleRedirect } from '@/lib/payload/redirects'
+
 type Props = {
     params: Promise<{ slug: string }>
 }
-
 
 export async function generateMetadata({
     params,
@@ -23,17 +25,21 @@ export async function generateMetadata({
     }
 
     const title =
-        attorney.seo?.title || `${attorney.name} | Aurelex Legal`
+        attorney.meta?.title ||
+        `${attorney.name} | Aurelex Legal`
 
     const description =
-        attorney.seo?.description ||
+        attorney.meta?.description ||
         attorney.shortDescription ||
         'Learn about our legal professionals and their experience.'
 
-    const image =
-        typeof attorney.seo?.socialImage === 'object'
-            ? attorney.seo.socialImage?.url
-            : undefined
+    const pluginImage =
+        typeof attorney.meta?.image === 'object' &&
+            attorney.meta.image !== null
+            ? attorney.meta.image
+            : null
+
+    const image = pluginImage?.url
 
     return {
         title: { absolute: title },
@@ -41,17 +47,24 @@ export async function generateMetadata({
         openGraph: {
             title,
             description,
-            images: image ? [image] : undefined,
+            images: image
+                ? [
+                    {
+                        url: image,
+                        alt: attorney.name,
+                    },
+                ]
+                : undefined,
         },
     }
 }
-
 
 export default async function AttorneyProfilePage({ params }: Props) {
     const { slug } = await params
     const attorney = await getAttorneyBySlug(slug)
 
     if (!attorney) {
+        await handleRedirect(`/our-attorneys/${slug}`)
         notFound()
     }
 
@@ -173,7 +186,7 @@ export default async function AttorneyProfilePage({ params }: Props) {
 
                     {attorney.email && (
                         <a
-                            href={`mailto:${attorney.email} `}
+                            href={`mailto:${attorney.email}`}
                             className="mt-8 inline-flex bg-amber-500 px-6 py-3 font-semibold text-slate-950 transition hover:bg-amber-400"
                         >
                             Contact Attorney

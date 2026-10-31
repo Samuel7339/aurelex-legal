@@ -65,35 +65,6 @@ export const PracticeAreas: CollectionConfig = {
       defaultValue: 0,
     },
 
-    {
-      name: 'seo',
-      type: 'group',
-      label: 'SEO Settings',
-      fields: [
-        {
-          name: 'title',
-          type: 'text',
-          admin: {
-            description: 'Optional SEO title for search engines.',
-          },
-        },
-        {
-          name: 'description',
-          type: 'textarea',
-          admin: {
-            description: 'Optional SEO description for search engines.',
-          },
-        },
-        {
-          name: 'socialImage',
-          type: 'upload',
-          relationTo: 'media',
-          admin: {
-            description: 'Optional image for social media sharing.',
-          },
-        },
-      ],
-    },
 
   ],
 }

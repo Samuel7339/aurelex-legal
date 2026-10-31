@@ -1,9 +1,14 @@
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
-import { buildConfig } from 'payload'
+import { buildConfig, type Plugin } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
+
+import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
+import { seoPlugin } from '@payloadcms/plugin-seo'
+import { redirectsPlugin } from '@payloadcms/plugin-redirects'
+
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
@@ -13,7 +18,6 @@ import { Testimonials } from './collections/Testimonials'
 import { FAQs } from './collections/FAQs'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
-import { ContactSubmissions } from './collections/ContactSubmissions'
 import { ConsultationBookings } from './collections/ConsultationBookings'
 import { GuidingPrinciples } from './collections/GuidingPrinciples'
 
@@ -64,6 +68,10 @@ export default buildConfig({
     },
   },
 
+
+
+
+
   collections: [
     Users,
     Media,
@@ -73,7 +81,6 @@ export default buildConfig({
     FAQs,
     Pages,
     Posts,
-    ContactSubmissions,
     ConsultationBookings,
     GuidingPrinciples,
   ],
@@ -94,5 +101,130 @@ export default buildConfig({
 
   sharp,
 
-  plugins: [],
+  plugins: [
+    seoPlugin({
+      collections: ['pages', 'posts', 'attorneys', 'practice-areas'],
+      uploadsCollection: 'media',
+
+      generateTitle: ({ doc, collectionSlug }) => {
+        if (collectionSlug === 'attorneys') {
+          return doc?.name
+            ? `${doc.name} | Aurelex Legal`
+            : 'Aurelex Legal'
+        }
+
+        if (collectionSlug === 'practice-areas') {
+          return doc?.title
+            ? `${doc.title} | Aurelex Legal`
+            : 'Aurelex Legal'
+        }
+
+        if (collectionSlug === 'posts') {
+          return doc?.title
+            ? `${doc.title} | Aurelex Legal`
+            : 'Aurelex Legal'
+        }
+
+        if (collectionSlug === 'pages') {
+          return doc?.title
+            ? `${doc.title} | Aurelex Legal`
+            : 'Aurelex Legal'
+        }
+
+        return 'Aurelex Legal'
+      },
+
+      generateDescription: ({ doc, collectionSlug }) => {
+        if (collectionSlug === 'pages') {
+          return doc?.description || ''
+        }
+
+        if (collectionSlug === 'posts') {
+          return doc?.excerpt || ''
+        }
+
+        if (collectionSlug === 'attorneys') {
+          return doc?.shortDescription || doc?.bio || ''
+        }
+
+        if (collectionSlug === 'practice-areas') {
+          return doc?.shortDescription || doc?.description || ''
+        }
+
+        return ''
+      },
+
+      generateImage: ({ doc, collectionSlug }) => {
+        if (collectionSlug === 'posts') {
+          return doc?.featuredImage
+        }
+
+        if (collectionSlug === 'attorneys') {
+          return doc?.photo || doc?.image || undefined
+        }
+
+        if (collectionSlug === 'practice-areas') {
+          return doc?.image || doc?.featuredImage || undefined
+        }
+
+        return undefined
+      },
+
+      generateURL: ({ doc, collectionSlug }) => {
+        if (collectionSlug === 'pages') {
+          return `https://YOUR-DOMAIN.com/${doc?.slug === 'home' ? '' : doc?.slug || ''}`
+        }
+
+        if (collectionSlug === 'attorneys') {
+          return `https://YOUR-DOMAIN.com/attorneys/${doc?.slug || ''}`
+        }
+
+        if (collectionSlug === 'practice-areas') {
+          return `https://YOUR-DOMAIN.com/practice-areas/${doc?.slug || ''}`
+        }
+
+        return `https://YOUR-DOMAIN.com/articles/${doc?.slug || ''}`
+      },
+    }),
+
+    redirectsPlugin({
+      collections: [
+        'pages',
+        'posts',
+        'attorneys',
+        'practice-areas',
+      ],
+      redirectTypes: ['301', '302'],
+    }),
+
+    formBuilderPlugin({
+      fields: {
+        text: true,
+        textarea: true,
+        email: true,
+        select: true,
+        radio: true,
+        checkbox: true,
+        number: true,
+        date: true,
+        message: true,
+      },
+      redirectRelationships: ['pages'],
+
+      formSubmissionOverrides: {
+        admin: {
+          group: 'Client Requests',
+        },
+      },
+      
+      formOverrides: {
+        admin: {
+          group: 'Website Content',
+        },
+      },
+
+    }),
+
+  ],
+
 })

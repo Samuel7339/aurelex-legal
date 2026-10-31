@@ -3,10 +3,16 @@ import type { Metadata } from 'next'
 import { getPageData } from '@/lib/payload/pages'
 import PageLayoutRenderer from '@/components/layout/PageLayoutRenderer'
 
-export const metadata: Metadata = {
-  title: 'Articles | Aurelex',
-  description:
-    'Explore legal updates, practical guidance, and perspectives on matters that affect you.',
+
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getPageData('insights')
+
+  return {
+    title: page?.meta?.title || 'Articles | Aurelex Legal',
+    description:
+      page?.meta?.description ||
+      'Explore legal updates, practical guidance, and perspectives on matters that affect you.',
+  }
 }
 
 export default async function ArticlesPage() {
@@ -18,7 +24,7 @@ export default async function ArticlesPage() {
 
   return (
     <main>
-      <PageLayoutRenderer layout={page.layout} />
+      <PageLayoutRenderer layout={page.layout} pageSlug={page.slug} />
     </main>
   )
 }

@@ -26,6 +26,7 @@ import AttorneysSection from '@/components/sections/AttorneysSection'
 import TestimonialsSection from '@/components/sections/TestimonialsSection'
 import FAQSection from '@/components/sections/FAQSection'
 import ArticlesListSection from '@/components/sections/ArticlesListSection'
+import ConsultationForm from '@/components/book-consultant/ConsultationForm'
 
 type PageLayoutRendererProps = {
     layout?: Page['layout'] | null
@@ -40,7 +41,6 @@ export default async function PageLayoutRenderer({
         return null
     }
 
-    // Fetch all practice areas only when the directory block exists.
     const hasDirectory = layout.some(
         (block) => block.blockType === 'practiceAreasDirectory',
     )
@@ -49,7 +49,6 @@ export default async function PageLayoutRenderer({
         ? await getAllPracticeAreas()
         : []
 
-    // Fetch all attorneys whenever an attorneys block uses "all".
     const needsAllAttorneys = layout.some(
         (block) =>
             block.blockType === 'attorneysSection' &&
@@ -60,7 +59,6 @@ export default async function PageLayoutRenderer({
         ? await getAllAttorneys()
         : []
 
-    // Fetch all published posts only when an insights block uses "all".
     const needsAllPosts = layout.some(
         (block) =>
             block.blockType === 'insightsSection' &&
@@ -69,6 +67,14 @@ export default async function PageLayoutRenderer({
 
     const allPosts = needsAllPosts
         ? await getPublishedPosts()
+        : []
+
+    const needsBookingPracticeAreas = layout.some(
+        (block) => block.blockType === 'consultantBooking',
+    )
+
+    const bookingPracticeAreas = needsBookingPracticeAreas
+        ? await getAllPracticeAreas()
         : []
 
     return (
@@ -121,8 +127,12 @@ export default async function PageLayoutRenderer({
                                 secondaryDescription={
                                     block.secondaryDescription ?? undefined
                                 }
-                                buttonLabel={block.buttonLabel ?? undefined}
-                                buttonUrl={block.buttonUrl ?? undefined}
+                                buttonLabel={block.buttonLabel?.trim() || undefined}
+                                buttonUrl={
+                                    block.destinationType === 'page'
+                                        ? block.selectedPage || undefined
+                                        : block.buttonUrl || undefined
+                                }
                                 highlightText={block.highlightText ?? undefined}
                                 statOneValue={block.statOneValue ?? undefined}
                                 statOneLabel={block.statOneLabel ?? undefined}
@@ -130,7 +140,6 @@ export default async function PageLayoutRenderer({
                                 statTwoLabel={block.statTwoLabel ?? undefined}
                             />
                         )
-
 
                     case 'guidingPrinciples': {
                         const principles = (block.principles ?? []).filter(
@@ -149,7 +158,6 @@ export default async function PageLayoutRenderer({
                             />
                         )
                     }
-
 
                     case 'practiceAreasGrid': {
                         const practiceAreas = (block.practiceAreas ?? []).filter(
@@ -184,14 +192,23 @@ export default async function PageLayoutRenderer({
                                         item !== null,
                                 )
 
+                        const viewAllUrl =
+                            block.viewAllDestinationType === 'page'
+                                ? block.selectedViewAllPage
+                                : block.viewAllUrl
+
                         return (
                             <AttorneysSection
                                 key={key}
                                 attorneys={attorneys}
                                 heading={block.heading}
                                 description={block.description ?? undefined}
-                                viewAllLabel={block.viewAllLabel ?? undefined}
-                                viewAllUrl={block.viewAllUrl ?? undefined}
+                                viewAllLabel={block.viewAllLabel?.trim() || undefined}
+                                viewAllUrl={viewAllUrl || undefined}
+                                enableLoadMore={
+                                    pageSlug === 'attorneys' &&
+                                    block.displayMode === 'all'
+                                }
                             />
                         )
                     }
@@ -238,14 +255,23 @@ export default async function PageLayoutRenderer({
                                         item !== null,
                                 )
 
+                        const viewAllUrl =
+                            block.destinationType === 'page'
+                                ? block.selectedPage
+                                : block.viewAllUrl
+
                         return (
                             <ArticlesListSection
                                 key={key}
                                 posts={posts}
                                 heading={block.heading}
                                 description={block.description ?? undefined}
-                                viewAllLabel={block.viewAllLabel ?? undefined}
-                                viewAllUrl={block.viewAllUrl ?? undefined}
+                                viewAllLabel={block.viewAllLabel?.trim() || undefined}
+                                viewAllUrl={viewAllUrl || undefined}
+                                enableLoadMore={
+                                    pageSlug === 'insights' &&
+                                    block.displayMode === 'all'
+                                }
                             />
                         )
                     }
@@ -263,6 +289,36 @@ export default async function PageLayoutRenderer({
                                 }
                             />
                         )
+
+                    case 'consultantBooking': {
+                        const practiceAreas = bookingPracticeAreas.map((area) => ({
+                            id: String(area.id),
+                            title: area.title,
+                        }))
+
+                        return (
+                            <section
+                                key={key}
+                                className="min-h-screen bg-gray-50 px-6 py-16"
+                            >
+                                <div className="mx-auto max-w-3xl">
+                                    {block.heading?.trim() && (
+                                        <div className="mb-10 text-center">
+                                            <h2 className="text-3xl font-bold text-gray-900">
+                                                {block.heading}
+                                            </h2>
+                                        </div>
+                                    )}
+
+                                    <div className="rounded-xl bg-white p-8 shadow-sm">
+                                        <ConsultationForm
+                                            practiceAreas={practiceAreas}
+                                        />
+                                    </div>
+                                </div>
+                            </section>
+                        )
+                    }
 
                     default:
                         return null

@@ -1,15 +1,6 @@
 
 import type { GlobalConfig } from 'payload'
-
-const pageOptions = [
-  { label: 'Home', value: '/' },
-  { label: 'About', value: '/about' },
-  { label: 'Practice Areas', value: '/practice-areas' },
-  { label: 'Our Attorneys', value: '/our-attorneys' },
-  { label: 'Insights', value: '/articles' },
-  { label: 'Contact', value: '/contact' },
-  { label: 'Book a Consultation', value: '/book-consultant' },
-]
+import { routeOptions } from '../generated/routeOptions'
 
 export const Header: GlobalConfig = {
   slug: 'header',
@@ -56,7 +47,7 @@ export const Header: GlobalConfig = {
           name: 'selectedPage',
           type: 'select',
           label: 'Select Page',
-          options: pageOptions,
+          options: [...routeOptions],
           admin: {
             condition: (_, siblingData) =>
               siblingData?.destinationType === 'page',
@@ -105,7 +96,7 @@ export const Header: GlobalConfig = {
       name: 'ctaSelectedPage',
       type: 'select',
       label: 'Select Page',
-      options: pageOptions,
+      options: [...routeOptions],
       admin: {
         condition: (_, siblingData) =>
           siblingData?.ctaDestinationType === 'page',

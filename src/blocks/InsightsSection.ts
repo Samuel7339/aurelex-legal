@@ -1,4 +1,6 @@
+
 import type { Block } from 'payload'
+import { routeOptions } from '../generated/routeOptions'
 
 export const InsightsSectionBlock: Block = {
   slug: 'insightsSection',
@@ -56,20 +58,57 @@ export const InsightsSectionBlock: Block = {
         {
           name: 'viewAllLabel',
           type: 'text',
+          label: 'Button Label',
           defaultValue: 'View All Insights',
           admin: {
             width: '50%',
           },
         },
         {
-          name: 'viewAllUrl',
-          type: 'text',
-          defaultValue: '/articles',
+          name: 'destinationType',
+          type: 'select',
+          label: 'Button Destination',
+          defaultValue: 'custom',
+          options: [
+            {
+              label: 'Choose an Existing Page',
+              value: 'page',
+            },
+            {
+              label: 'Enter a Custom URL',
+              value: 'custom',
+            },
+          ],
           admin: {
             width: '50%',
+            description: 'Choose a website page or enter your own URL.',
           },
         },
       ],
+    },
+    {
+      name: 'selectedPage',
+      type: 'select',
+      label: 'Select Page',
+      defaultValue: '/articles',
+      options: [...routeOptions],
+      admin: {
+        condition: (_, siblingData) =>
+          siblingData?.destinationType === 'page',
+      },
+    },
+    {
+      name: 'viewAllUrl',
+      type: 'text',
+      label: 'Custom URL',
+      required: false,
+      defaultValue: '/articles',
+      admin: {
+        condition: (_, siblingData) =>
+          siblingData?.destinationType === 'custom',
+        description:
+          'Enter a path such as /articles or an external URL such as https://example.com.',
+      },
     },
   ],
 }

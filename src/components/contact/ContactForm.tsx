@@ -1,50 +1,145 @@
 
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
+const FORM_ID = '6ae43a945a553389430e7ea3'
+
+type FormField = {
+    blockType: string
+    name?: string
+    label?: string
+    width?: number
+    required?: boolean
+    defaultValue?: string | number | boolean | null
+}
+
+type ContactFormConfig = {
+    id: string
+    fields: FormField[]
+    submitButtonLabel?: string
+    confirmationType?: 'message' | 'redirect'
+    confirmationMessage?: unknown
+    redirect?: {
+        url?: string
+    }
+}
 
 export default function ContactForm() {
+    const [formConfig, setFormConfig] = useState<ContactFormConfig | null>(null)
+    const [values, setValues] = useState<Record<string, string>>({})
     const [loading, setLoading] = useState(false)
     const [status, setStatus] = useState('')
     const [isError, setIsError] = useState(false)
+
+    useEffect(() => {
+        async function loadForm() {
+            try {
+                const response = await fetch(`/api/forms/${FORM_ID}`)
+
+                if (!response.ok) {
+                    throw new Error('Unable to load the contact form.')
+                }
+
+                const form = await response.json()
+
+                setFormConfig(form)
+
+                const initialValues: Record<string, string> = {}
+
+                for (const field of form.fields || []) {
+                    if (field.name) {
+                        initialValues[field.name] = String(field.defaultValue ?? '')
+                    }
+                }
+
+                setValues(initialValues)
+            } catch (error) {
+                setIsError(true)
+                setStatus(
+                    error instanceof Error
+                        ? error.message
+                        : 'Unable to load the contact form.',
+                )
+            }
+        }
+
+        loadForm()
+    }, [])
+
+    function updateValue(name: string, value: string) {
+        setValues((previous) => ({
+            ...previous,
+            [name]: value,
+        }))
+    }
 
     async function handleSubmit(
         event: React.FormEvent<HTMLFormElement>,
     ) {
         event.preventDefault()
 
+        if (!formConfig) return
+
         setLoading(true)
         setStatus('')
         setIsError(false)
 
-        const form = event.currentTarget
-        const formData = new FormData(form)
-
-        const data = {
-            name: formData.get('name'),
-            email: formData.get('email'),
-            phone: formData.get('phone'),
-            subject: formData.get('subject'),
-            message: formData.get('message'),
-        }
-
         try {
-            const response = await fetch('/api/contact', {
+            const phone = values.phone?.trim() || ''
+
+            if (!/^[6-9][0-9]{9}$/.test(phone)) {
+                throw new Error('Enter a valid 10-digit Indian mobile number.')
+            }
+
+            if ((values.message || '').trim().length < 10) {
+                throw new Error('Message must contain at least 10 characters.')
+            }
+
+            const submissionData = formConfig.fields
+                .filter((field) => field.name)
+                .map((field) => ({
+                    field: field.name!,
+                    value: values[field.name!] ?? '',
+                }))
+
+            const response = await fetch('/api/form-submissions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data),
+                body: JSON.stringify({
+                    form: formConfig.id,
+                    submissionData,
+                }),
             })
 
             const result = await response.json()
 
             if (!response.ok) {
-                throw new Error(result.message || 'Submission failed.')
+                throw new Error(
+                    result.errors?.[0]?.message ||
+                    result.message ||
+                    'Submission failed.',
+                )
             }
 
-            setStatus(result.message)
-            form.reset()
+            if (
+                formConfig.confirmationType === 'redirect' &&
+                formConfig.redirect?.url
+            ) {
+                window.location.href = formConfig.redirect.url
+                return
+            }
+
+            setStatus('Form submitted successfully.')
+            setValues(
+                Object.fromEntries(
+                    formConfig.fields
+                        .filter((field) => field.name)
+                        .map((field) => [field.name!, '']),
+                ),
+            )
         } catch (error) {
             setIsError(true)
             setStatus(
@@ -57,93 +152,115 @@ export default function ContactForm() {
         }
     }
 
+    if (!formConfig && !status) {
+        return (
+            <p className="mt-8 text-sm text-slate-500">
+                Loading contact form...
+            </p>
+        )
+    }
+
+    if (!formConfig) {
+        return (
+            <p role="alert" className="mt-8 text-sm text-red-600">
+                {status || 'Unable to load the contact form.'}
+            </p>
+        )
+    }
+
     return (
         <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-            <div>
-                <label htmlFor="name" className="mb-2 block text-sm font-medium">
-                    Full Name
-                </label>
-                <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    required
-                    maxLength={120}
-                    autoComplete="name"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-700"
-                />
-            </div>
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                {formConfig.fields.map((field) => {
+                    if (!field.name || field.blockType === 'message') {
+                        return null
+                    }
 
-            <div>
-                <label htmlFor="email" className="mb-2 block text-sm font-medium">
-                    Email Address
-                </label>
-                <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    maxLength={254}
-                    autoComplete="email"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-700"
-                />
-            </div>
+                    const name = field.name
+                    const isTextarea = field.blockType === 'textarea'
+                    const isEmail = field.blockType === 'email'
+                    const isPhone = name === 'phone'
+                    const width = field.width === 50 ? 'sm:col-span-1' : 'sm:col-span-2'
 
+                    return (
+                        <div key={name} className={width}>
+                            <label
+                                htmlFor={name}
+                                className="mb-2 block text-sm font-medium"
+                            >
+                                {field.label || name}
+                            </label>
 
-            <div>
-                <label htmlFor="phone" className="mb-2 block text-sm font-medium">
-                    Phone Number
-                </label>
-                <input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    required
-                    inputMode="numeric"
-                    pattern="[6-9][0-9]{9}"
-                    minLength={10}
-                    maxLength={10}
-                    autoComplete="tel"
-                    title="Enter a valid 10-digit Indian mobile number"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-700"
-                />
-            </div>
-
-
-            <div>
-                <label htmlFor="subject" className="mb-2 block text-sm font-medium">
-                    Subject
-                </label>
-                <input
-                    id="subject"
-                    name="subject"
-                    type="text"
-                    required
-                    maxLength={200}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-700"
-                />
-            </div>
-
-            <div>
-                <label htmlFor="message" className="mb-2 block text-sm font-medium">
-                    How Can We Help?
-                </label>
-                <textarea
-                    id="message"
-                    name="message"
-                    required
-                    minLength={10}
-                    maxLength={5000}
-                    rows={5}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-700"
-                />
+                            {isTextarea ? (
+                                <textarea
+                                    id={name}
+                                    name={name}
+                                    required={field.required}
+                                    minLength={name === 'message' ? 10 : undefined}
+                                    maxLength={name === 'message' ? 5000 : undefined}
+                                    rows={5}
+                                    value={values[name] || ''}
+                                    onChange={(event) =>
+                                        updateValue(name, event.target.value)
+                                    }
+                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-700"
+                                />
+                            ) : (
+                                <input
+                                    id={name}
+                                    name={name}
+                                    type={
+                                        isEmail
+                                            ? 'email'
+                                            : isPhone
+                                                ? 'tel'
+                                                : 'text'
+                                    }
+                                    required={field.required}
+                                    maxLength={
+                                        name === 'name'
+                                            ? 120
+                                            : name === 'email'
+                                                ? 254
+                                                : name === 'subject'
+                                                    ? 200
+                                                    : isPhone
+                                                        ? 10
+                                                        : undefined
+                                    }
+                                    minLength={isPhone ? 10 : undefined}
+                                    inputMode={isPhone ? 'numeric' : undefined}
+                                    pattern={isPhone ? '[6-9][0-9]{9}' : undefined}
+                                    autoComplete={
+                                        name === 'name'
+                                            ? 'name'
+                                            : name === 'email'
+                                                ? 'email'
+                                                : isPhone
+                                                    ? 'tel'
+                                                    : undefined
+                                    }
+                                    value={values[name] || ''}
+                                    onChange={(event) =>
+                                        updateValue(name, event.target.value)
+                                    }
+                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-700"
+                                />
+                            )}
+                        </div>
+                    )
+                })}
             </div>
 
             {status && (
                 <p
                     role="status"
                     aria-live="polite"
-                    className={isError ? 'text-sm text-red-600' : 'text-sm text-green-700'}
+                    className={
+                        isError
+                            ? 'text-sm text-red-600'
+                            : 'text-sm text-green-700'
+                    }
                 >
                     {status}
                 </p>
@@ -154,7 +271,9 @@ export default function ContactForm() {
                 disabled={loading}
                 className="rounded-lg bg-blue-900 px-6 py-3 font-semibold text-white transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
             >
-                {loading ? 'Submitting...' : 'Submit Enquiry →'}
+                {loading
+                    ? 'Submitting...'
+                    : formConfig.submitButtonLabel || 'Submit Enquiry'}
             </button>
         </form>
     )

@@ -1,5 +1,6 @@
 
 import type { Block } from 'payload'
+import { routeOptions } from '../generated/routeOptions'
 
 export const CTABlock: Block = {
   slug: 'cta',
@@ -53,15 +54,7 @@ export const CTABlock: Block = {
       name: 'selectedPage',
       type: 'select',
       label: 'Select Page',
-      options: [
-        { label: 'Home', value: '/' },
-        { label: 'About', value: '/about' },
-        { label: 'Practice Areas', value: '/practice-areas' },
-        { label: 'Our Attorneys', value: '/our-attorneys' },
-        { label: 'Insights', value: '/articles' },
-        { label: 'Contact', value: '/contact' },
-        { label: 'Book a Consultation', value: '/book-consultant' },
-      ],
+      options: [...routeOptions],
       admin: {
         condition: (_, siblingData) =>
           siblingData?.destinationType === 'page',

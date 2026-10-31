@@ -1085,7 +1085,6 @@ button.default-cell__first-cell {
   color: #172338 !important;
 }
 
-
 /* Calendar text color only */
 .react-datepicker {
   .react-datepicker__day,
@@ -1095,7 +1094,6 @@ button.default-cell__first-cell {
     color: #000000 !important;
   }
 }
-
 
 /* Current date */
 .react-datepicker {
@@ -1118,4 +1116,37 @@ button.default-cell__first-cell {
   }
 }
 
+/* Read-only fields: Consultation Bookings */
+body:has(a[href*="/collections/consultation-bookings/"]) {
+  --readonly-bg: #F1F3F5;
+  --readonly-text: #64748B;
+  --readonly-border: #D7DCE2;
+}
 
+/* Inputs and textareas */
+body:has(a[href*="/collections/consultation-bookings/"]) .field-type.read-only:not(#field-status) :is(input:disabled, textarea:disabled) {
+  background: var(--readonly-bg) !important;
+  color: var(--readonly-text) !important;
+  border-color: var(--readonly-border) !important;
+  cursor: not-allowed !important;
+}
+
+/* Disabled select controls - exclude Status */
+body:has(a[href*="/collections/consultation-bookings/"]) .field-type.read-only:not(#field-status) .rs__control--is-disabled,
+body:has(a[href*="/collections/consultation-bookings/"]) .relationship--read-only .rs__control--is-disabled {
+  background: var(--readonly-bg) !important;
+  border-color: var(--readonly-border) !important;
+  cursor: not-allowed !important;
+}
+
+/* Entire disabled React Select area */
+body:has(a[href*="/collections/consultation-bookings/"]) .relationship--read-only .react-select.rs--is-disabled,
+body:has(a[href*="/collections/consultation-bookings/"]) .relationship--read-only .react-select.rs--is-disabled * {
+  cursor: not-allowed !important;
+}
+
+/* Selected values and indicators */
+body:has(a[href*="/collections/consultation-bookings/"]) :is(.field-type.read-only, .relationship--read-only):not(#field-status) :is(.rs__single-value--is-disabled, .dropdown-indicator, .relationship--single-value__drawer-toggler) {
+  color: var(--readonly-text) !important;
+  cursor: not-allowed !important;
+}

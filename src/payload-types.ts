@@ -75,9 +75,11 @@ export interface Config {
     faqs: Faq;
     pages: Page;
     posts: Post;
-    'contact-submissions': ContactSubmission;
     'consultation-bookings': ConsultationBooking;
     'guiding-principles': GuidingPrinciple;
+    redirects: Redirect;
+    forms: Form;
+    'form-submissions': FormSubmission;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -93,9 +95,11 @@ export interface Config {
     faqs: FaqsSelect<false> | FaqsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
-    'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
     'consultation-bookings': ConsultationBookingsSelect<false> | ConsultationBookingsSelect<true>;
     'guiding-principles': GuidingPrinciplesSelect<false> | GuidingPrinciplesSelect<true>;
+    redirects: RedirectsSelect<false> | RedirectsSelect<true>;
+    forms: FormsSelect<false> | FormsSelect<true>;
+    'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -224,19 +228,13 @@ export interface PracticeArea {
       }[]
     | null;
   sortOrder?: number | null;
-  seo?: {
-    /**
-     * Optional SEO title for search engines.
-     */
+  meta?: {
     title?: string | null;
-    /**
-     * Optional SEO description for search engines.
-     */
     description?: string | null;
     /**
-     * Optional image for social media sharing.
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
      */
-    socialImage?: (string | null) | Media;
+    image?: (string | null) | Media;
   };
   updatedAt: string;
   createdAt: string;
@@ -279,19 +277,13 @@ export interface Attorney {
   practiceAreas?: (string | PracticeArea)[] | null;
   email?: string | null;
   sortOrder?: number | null;
-  seo?: {
-    /**
-     * Optional SEO title for this attorney profile.
-     */
+  meta?: {
     title?: string | null;
-    /**
-     * Optional SEO description for search engines.
-     */
     description?: string | null;
     /**
-     * Optional image for social media sharing.
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
      */
-    socialImage?: (string | null) | Media;
+    image?: (string | null) | Media;
   };
   updatedAt: string;
   createdAt: string;
@@ -360,12 +352,24 @@ export interface Page {
         | AboutFirmBlock
         | InsightsSectionBlock
         | PracticeAreasDirectoryBlock
+        | {
+            /**
+             * Optional heading displayed above the booking form.
+             */
+            heading?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'consultantBooking';
+          }
       )[]
     | null;
-  seo?: {
+  meta?: {
     title?: string | null;
     description?: string | null;
-    socialImage?: (string | null) | Media;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
   };
   updatedAt: string;
   createdAt: string;
@@ -394,7 +398,7 @@ export interface CTABlock {
    */
   destinationType?: ('page' | 'custom') | null;
   selectedPage?:
-    ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant') | null;
+    ('/' | '/about' | '/articles' | '/book-consultant' | '/contact' | '/our-attorneys' | '/practice-areas') | null;
   /**
    * Enter a path such as /contact or an external URL such as https://example.com.
    */
@@ -431,7 +435,7 @@ export interface HomeHeroBlock {
         primaryButtonLabel?: string | null;
         primaryButtonDestinationType?: ('page' | 'custom') | null;
         primaryButtonSelectedPage?:
-          | ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant')
+          | ('/' | '/about' | '/articles' | '/book-consultant' | '/contact' | '/our-attorneys' | '/practice-areas')
           | null;
         /**
          * Enter a path such as /contact or a complete URL such as https://example.com.
@@ -440,7 +444,7 @@ export interface HomeHeroBlock {
         secondaryButtonLabel?: string | null;
         secondaryButtonDestinationType?: ('page' | 'custom') | null;
         secondaryButtonSelectedPage?:
-          | ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant')
+          | ('/' | '/about' | '/articles' | '/book-consultant' | '/contact' | '/our-attorneys' | '/practice-areas')
           | null;
         /**
          * Enter a path such as /contact or a complete URL such as https://example.com.
@@ -501,7 +505,7 @@ export interface AttorneysSectionBlock {
   viewAllLabel?: string | null;
   viewAllDestinationType?: ('page' | 'custom') | null;
   selectedViewAllPage?:
-    ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant') | null;
+    ('/' | '/about' | '/articles' | '/book-consultant' | '/contact' | '/our-attorneys' | '/practice-areas') | null;
   viewAllUrl?: string | null;
   id?: string | null;
   blockName?: string | null;
@@ -522,7 +526,7 @@ export interface WhyChooseUsBlock {
    */
   destinationType?: ('page' | 'custom') | null;
   selectedPage?:
-    ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant') | null;
+    ('/' | '/about' | '/articles' | '/book-consultant' | '/contact' | '/our-attorneys' | '/practice-areas') | null;
   /**
    * Enter a path such as /contact or an external URL such as https://example.com.
    */
@@ -596,7 +600,7 @@ export interface AboutFirmBlock {
   buttonLabel?: string | null;
   buttonDestinationType?: ('page' | 'custom') | null;
   selectedButtonPage?:
-    ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant') | null;
+    ('/' | '/about' | '/articles' | '/book-consultant' | '/contact' | '/our-attorneys' | '/practice-areas') | null;
   /**
    * Enter a path or a complete external URL.
    */
@@ -621,6 +625,15 @@ export interface InsightsSectionBlock {
    */
   posts?: (string | Post)[] | null;
   viewAllLabel?: string | null;
+  /**
+   * Choose a website page or enter your own URL.
+   */
+  destinationType?: ('page' | 'custom') | null;
+  selectedPage?:
+    ('/' | '/about' | '/articles' | '/book-consultant' | '/contact' | '/our-attorneys' | '/practice-areas') | null;
+  /**
+   * Enter a path such as /articles or an external URL such as https://example.com.
+   */
   viewAllUrl?: string | null;
   id?: string | null;
   blockName?: string | null;
@@ -658,10 +671,13 @@ export interface Post {
     [k: string]: unknown;
   };
   publishedAt?: string | null;
-  seo?: {
+  meta?: {
     title?: string | null;
     description?: string | null;
-    socialImage?: (string | null) | Media;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
   };
   updatedAt: string;
   createdAt: string;
@@ -678,20 +694,6 @@ export interface PracticeAreasDirectoryBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "contact-submissions".
- */
-export interface ContactSubmission {
-  id: string;
-  name: string;
-  email: string;
-  phone?: string | null;
-  subject: string;
-  message: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "consultation-bookings".
  */
 export interface ConsultationBooking {
@@ -703,6 +705,252 @@ export interface ConsultationBooking {
   preferredDate?: string | null;
   status?: ('pending' | 'contacted' | 'confirmed' | 'cancelled') | null;
   message?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects".
+ */
+export interface Redirect {
+  id: string;
+  from: string;
+  to?: {
+    type?: ('reference' | 'custom') | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: string | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: string | Post;
+        } | null)
+      | ({
+          relationTo: 'attorneys';
+          value: string | Attorney;
+        } | null)
+      | ({
+          relationTo: 'practice-areas';
+          value: string | PracticeArea;
+        } | null);
+    url?: string | null;
+  };
+  type: '301' | '302';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "forms".
+ */
+export interface Form {
+  id: string;
+  title: string;
+  fields?:
+    | (
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            defaultValue?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'checkbox';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'country';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'email';
+          }
+        | {
+            message?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'message';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'number';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            placeholder?: string | null;
+            options?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'select';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'state';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'text';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'textarea';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            options?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'radio';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            defaultValue?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'date';
+          }
+      )[]
+    | null;
+  submitButtonLabel?: string | null;
+  confirmationType?: ('message' | 'redirect') | null;
+  confirmationMessage?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  redirect?: {
+    type?: ('reference' | 'custom') | null;
+    reference?: {
+      relationTo: 'pages';
+      value: string | Page;
+    } | null;
+    url?: string | null;
+  };
+  emails?:
+    | {
+        emailTo?: string | null;
+        cc?: string | null;
+        bcc?: string | null;
+        replyTo?: string | null;
+        emailFrom?: string | null;
+        subject: string;
+        message?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "form-submissions".
+ */
+export interface FormSubmission {
+  id: string;
+  form: string | Form;
+  submissionData?:
+    | {
+        field: string;
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -763,16 +1011,24 @@ export interface PayloadLockedDocument {
         value: string | Post;
       } | null)
     | ({
-        relationTo: 'contact-submissions';
-        value: string | ContactSubmission;
-      } | null)
-    | ({
         relationTo: 'consultation-bookings';
         value: string | ConsultationBooking;
       } | null)
     | ({
         relationTo: 'guiding-principles';
         value: string | GuidingPrinciple;
+      } | null)
+    | ({
+        relationTo: 'redirects';
+        value: string | Redirect;
+      } | null)
+    | ({
+        relationTo: 'forms';
+        value: string | Form;
+      } | null)
+    | ({
+        relationTo: 'form-submissions';
+        value: string | FormSubmission;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -875,12 +1131,12 @@ export interface PracticeAreasSelect<T extends boolean = true> {
         id?: T;
       };
   sortOrder?: T;
-  seo?:
+  meta?:
     | T
     | {
         title?: T;
         description?: T;
-        socialImage?: T;
+        image?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -902,12 +1158,12 @@ export interface AttorneysSelect<T extends boolean = true> {
   practiceAreas?: T;
   email?: T;
   sortOrder?: T;
-  seo?:
+  meta?:
     | T
     | {
         title?: T;
         description?: T;
-        socialImage?: T;
+        image?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -965,13 +1221,20 @@ export interface PagesSelect<T extends boolean = true> {
         aboutFirm?: T | AboutFirmBlockSelect<T>;
         insightsSection?: T | InsightsSectionBlockSelect<T>;
         practiceAreasDirectory?: T | PracticeAreasDirectoryBlockSelect<T>;
+        consultantBooking?:
+          | T
+          | {
+              heading?: T;
+              id?: T;
+              blockName?: T;
+            };
       };
-  seo?:
+  meta?:
     | T
     | {
         title?: T;
         description?: T;
-        socialImage?: T;
+        image?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -1131,6 +1394,8 @@ export interface InsightsSectionBlockSelect<T extends boolean = true> {
   displayMode?: T;
   posts?: T;
   viewAllLabel?: T;
+  destinationType?: T;
+  selectedPage?: T;
   viewAllUrl?: T;
   id?: T;
   blockName?: T;
@@ -1157,29 +1422,16 @@ export interface PostsSelect<T extends boolean = true> {
   author?: T;
   content?: T;
   publishedAt?: T;
-  seo?:
+  meta?:
     | T
     | {
         title?: T;
         description?: T;
-        socialImage?: T;
+        image?: T;
       };
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "contact-submissions_select".
- */
-export interface ContactSubmissionsSelect<T extends boolean = true> {
-  name?: T;
-  email?: T;
-  phone?: T;
-  subject?: T;
-  message?: T;
-  updatedAt?: T;
-  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1207,6 +1459,203 @@ export interface GuidingPrinciplesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects_select".
+ */
+export interface RedirectsSelect<T extends boolean = true> {
+  from?: T;
+  to?:
+    | T
+    | {
+        type?: T;
+        reference?: T;
+        url?: T;
+      };
+  type?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "forms_select".
+ */
+export interface FormsSelect<T extends boolean = true> {
+  title?: T;
+  fields?:
+    | T
+    | {
+        checkbox?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              required?: T;
+              defaultValue?: T;
+              id?: T;
+              blockName?: T;
+            };
+        country?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
+        email?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
+        message?:
+          | T
+          | {
+              message?: T;
+              id?: T;
+              blockName?: T;
+            };
+        number?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
+        select?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              placeholder?: T;
+              options?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
+        state?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
+        text?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
+        textarea?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
+        radio?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              options?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
+        date?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              required?: T;
+              defaultValue?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  submitButtonLabel?: T;
+  confirmationType?: T;
+  confirmationMessage?: T;
+  redirect?:
+    | T
+    | {
+        type?: T;
+        reference?: T;
+        url?: T;
+      };
+  emails?:
+    | T
+    | {
+        emailTo?: T;
+        cc?: T;
+        bcc?: T;
+        replyTo?: T;
+        emailFrom?: T;
+        subject?: T;
+        message?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "form-submissions_select".
+ */
+export interface FormSubmissionsSelect<T extends boolean = true> {
+  form?: T;
+  submissionData?:
+    | T
+    | {
+        field?: T;
+        value?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1259,7 +1708,7 @@ export interface Header {
         label: string;
         destinationType?: ('page' | 'custom') | null;
         selectedPage?:
-          | ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant')
+          | ('/' | '/about' | '/articles' | '/book-consultant' | '/contact' | '/our-attorneys' | '/practice-areas')
           | null;
         url?: string | null;
         id?: string | null;
@@ -1268,7 +1717,7 @@ export interface Header {
   ctaLabel?: string | null;
   ctaDestinationType?: ('page' | 'custom') | null;
   ctaSelectedPage?:
-    ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant') | null;
+    ('/' | '/about' | '/articles' | '/book-consultant' | '/contact' | '/our-attorneys' | '/practice-areas') | null;
   ctaUrl?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1285,7 +1734,7 @@ export interface Footer {
         label: string;
         destinationType?: ('page' | 'custom') | null;
         selectedPage?:
-          | ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant')
+          | ('/' | '/about' | '/articles' | '/book-consultant' | '/contact' | '/our-attorneys' | '/practice-areas')
           | null;
         url?: string | null;
         id?: string | null;
@@ -1304,7 +1753,7 @@ export interface Footer {
         viewAllLabel?: string | null;
         viewAllDestinationType?: ('page' | 'custom') | null;
         viewAllSelectedPage?:
-          | ('/' | '/about' | '/practice-areas' | '/our-attorneys' | '/articles' | '/contact' | '/book-consultant')
+          | ('/' | '/about' | '/articles' | '/book-consultant' | '/contact' | '/our-attorneys' | '/practice-areas')
           | null;
         viewAllCustomUrl?: string | null;
         id?: string | null;

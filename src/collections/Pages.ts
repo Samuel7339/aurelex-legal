@@ -14,6 +14,7 @@ import { GuidingPrinciplesBlock } from '@/blocks/GuidingPrinciples'
 import { AboutFirmBlock } from '@/blocks/AboutFirm'
 import { InsightsSectionBlock } from '@/blocks/InsightsSection'
 import { PracticeAreasDirectoryBlock } from '@/blocks/PracticeAreasDirectory'
+import { ConsultantBookingBlock } from '@/blocks/ConsultantBooking'
 
 // import { revalidatePages } from '@/hooks/revalidatePages'
 
@@ -108,30 +109,12 @@ export const Pages: CollectionConfig = {
         AboutFirmBlock,
         InsightsSectionBlock,
         PracticeAreasDirectoryBlock,
+        ConsultantBookingBlock,
       ],
       admin: {
         description: 'Configure reusable sections for this page.',
       },
     },
-    {
-      name: 'seo',
-      type: 'group',
-      label: 'SEO Settings',
-      fields: [
-        {
-          name: 'title',
-          type: 'text',
-        },
-        {
-          name: 'description',
-          type: 'textarea',
-        },
-        {
-          name: 'socialImage',
-          type: 'upload',
-          relationTo: 'media',
-        },
-      ],
-    },
+  
   ],
 }

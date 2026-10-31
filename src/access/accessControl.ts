@@ -56,15 +56,7 @@ export const adminPublishEditorDraftUpdate: Access = ({ req, data }) => {
   }
 
   if (isEditor(user)) {
-    if (data?._status === 'published') {
-      return false
-    }
-
-    return {
-      _status: {
-        equals: 'draft',
-      },
-    }
+    return data?._status !== 'published'
   }
 
   return false

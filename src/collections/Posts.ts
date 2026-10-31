@@ -95,25 +95,6 @@ export const Posts: CollectionConfig = {
         },
       },
     },
-    {
-      name: 'seo',
-      type: 'group',
-      label: 'SEO Settings',
-      fields: [
-        {
-          name: 'title',
-          type: 'text',
-        },
-        {
-          name: 'description',
-          type: 'textarea',
-        },
-        {
-          name: 'socialImage',
-          type: 'upload',
-          relationTo: 'media',
-        },
-      ],
-    },
+    
   ],
 }

@@ -1,12 +1,17 @@
 
+import type { Metadata } from 'next'
 import { getPageData } from '@/lib/payload/pages'
 import PageLayoutRenderer from '@/components/layout/PageLayoutRenderer'
-import type { Metadata } from 'next'
 
-export const metadata: Metadata = {
-  title: 'About Us | Aurelex Legal',
-  description:
-    'Learn about Aurelex Legal, our values, and our commitment to providing thoughtful legal guidance and professional representation.',
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getPageData('about')
+
+  return {
+    title: page?.meta?.title || 'About Us | Aurelex Legal',
+    description:
+      page?.meta?.description ||
+      'Learn about Aurelex Legal, our values, and our commitment to providing thoughtful legal guidance and professional representation.',
+  }
 }
 
 export default async function AboutPage() {
