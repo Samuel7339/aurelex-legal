@@ -1,19 +1,19 @@
 
-import { getPayloadClient } from '@/lib/payload/getPayloadClient'
+// import { getPayloadClient } from '@/lib/payload/getPayloadClient'
 
-export async function getFeaturedTestimonials() {
-    const payload = await getPayloadClient()
+// export async function getFeaturedTestimonials() {
+//     const payload = await getPayloadClient()
 
-    const result = await payload.find({
-        collection: 'testimonials',
-        where: {
-            featured: {
-                equals: true,
-            },
-        },
-        sort: 'sortOrder',
-        limit: 20,
-    })
+//     const result = await payload.find({
+//         collection: 'testimonials',
+//         where: {
+//             featured: {
+//                 equals: true,
+//             },
+//         },
+//         sort: 'sortOrder',
+//         limit: 20,
+//     })
 
-    return result.docs
-}
+//     return result.docs
+// }

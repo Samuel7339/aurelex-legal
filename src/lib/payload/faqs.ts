@@ -1,14 +1,14 @@
 
-import { getPayloadClient } from '@/lib/payload/getPayloadClient'
+// import { getPayloadClient } from '@/lib/payload/getPayloadClient'
 
-export async function getFAQs() {
-    const payload = await getPayloadClient()
+// export async function getFAQs() {
+//     const payload = await getPayloadClient()
 
-    const result = await payload.find({
-        collection: 'faqs',
-        sort: 'sortOrder',
-        limit: 100,
-    })
+//     const result = await payload.find({
+//         collection: 'faqs',
+//         sort: 'sortOrder',
+//         limit: 100,
+//     })
 
-    return result.docs
-}
+//     return result.docs
+// }

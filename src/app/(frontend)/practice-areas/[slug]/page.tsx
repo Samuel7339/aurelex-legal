@@ -26,7 +26,7 @@ async function getPracticeArea(slug: string) {
     limit: 1,
     depth: 1,
   })
-
+  
   return result.docs[0] ?? null
 }
 

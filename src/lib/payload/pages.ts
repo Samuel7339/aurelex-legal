@@ -1,12 +1,15 @@
 
 import 'server-only'
+import { draftMode } from 'next/headers'
 import { getPayloadClient } from '@/lib/payload/getPayloadClient'
 
 export async function getHomePageData() {
     const payload = await getPayloadClient()
+    const { isEnabled } = await draftMode()
 
     const result = await payload.find({
         collection: 'pages',
+        draft: isEnabled,
         where: {
             and: [
                 {
@@ -14,11 +17,15 @@ export async function getHomePageData() {
                         equals: 'home',
                     },
                 },
-                {
-                    _status: {
-                        equals: 'published',
-                    },
-                },
+                ...(!isEnabled
+                    ? [
+                        {
+                            _status: {
+                                equals: 'published',
+                            },
+                        },
+                    ]
+                    : []),
             ],
         },
         limit: 1,
@@ -30,9 +37,11 @@ export async function getHomePageData() {
 
 export async function getPageData(pageType: string) {
     const payload = await getPayloadClient()
+    const { isEnabled } = await draftMode()
 
     const result = await payload.find({
         collection: 'pages',
+        draft: isEnabled,
         where: {
             and: [
                 {
@@ -40,11 +49,15 @@ export async function getPageData(pageType: string) {
                         equals: pageType,
                     },
                 },
-                {
-                    _status: {
-                        equals: 'published',
-                    },
-                },
+                ...(!isEnabled
+                    ? [
+                        {
+                            _status: {
+                                equals: 'published',
+                            },
+                        },
+                    ]
+                    : []),
             ],
         },
         limit: 1,

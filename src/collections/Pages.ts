@@ -16,7 +16,7 @@ import { InsightsSectionBlock } from '@/blocks/InsightsSection'
 import { PracticeAreasDirectoryBlock } from '@/blocks/PracticeAreasDirectory'
 import { ConsultantBookingBlock } from '@/blocks/ConsultantBooking'
 
-// import { revalidatePages } from '@/hooks/revalidatePages'
+
 
 import {
   adminOnly,
@@ -29,10 +29,33 @@ export const Pages: CollectionConfig = {
   slug: 'pages',
 
   admin: {
-    useAsTitle: 'title',
-    defaultColumns: ['title', 'slug', 'pageType', 'updatedAt'],
-    group: 'Website Content',
-  },
+  useAsTitle: 'title',
+  defaultColumns: ['title', 'slug', 'pageType', 'updatedAt'],
+  group: 'Website Content',
+
+preview: (doc) => {
+  const pagePaths: Record<string, string> = {
+    home: '/',
+    about: '/about',
+    'practice-areas': '/practice-areas',
+    attorneys: '/our-attorneys',
+    insights: '/articles',
+    contact: '/contact',
+  }
+
+  const path = pagePaths[String(doc?.pageType)]
+
+  if (!path) return null
+
+  const params = new URLSearchParams({
+    collection: 'pages',
+    slug: String(doc?.slug || ''),
+    path,
+  })
+
+  return `/preview?${params.toString()}`
+},
+},
 
   access: {
     read: publishedOrStaff,
