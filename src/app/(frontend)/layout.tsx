@@ -1,11 +1,15 @@
 
 import type { Metadata } from 'next'
 import React from 'react'
+import { draftMode } from 'next/headers'
+
 import './styles.css'
+
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { getSiteSettings } from '@/lib/payload/globals'
 import Breadcrumbs from '@/components/layout/Breadcrumbs'
+import { RefreshRouteOnSave } from '@/components/LivePreview/RefreshRouteOnSave'
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings()
@@ -40,9 +44,13 @@ export default async function RootLayout(props: {
 }) {
   const { children } = props
 
+  const { isEnabled: isDraftMode } = await draftMode()
+
   return (
     <html lang="en">
       <body>
+        {isDraftMode && <RefreshRouteOnSave />}
+
         <Header />
         <Breadcrumbs />
         <main>{children}</main>

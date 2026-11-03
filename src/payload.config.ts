@@ -1,3 +1,4 @@
+
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
@@ -9,7 +10,6 @@ import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 
-
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { PracticeAreas } from './collections/PracticeAreas'
@@ -20,7 +20,6 @@ import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
 import { ConsultationBookings } from './collections/ConsultationBookings'
 import { GuidingPrinciples } from './collections/GuidingPrinciples'
-
 
 import { Header } from './globals/Header'
 import { Footer } from './globals/Footer'
@@ -43,9 +42,11 @@ if (!databaseURL) {
 export default buildConfig({
   admin: {
     user: Users.slug,
+
     importMap: {
       baseDir: path.resolve(dirname),
     },
+
     meta: {
       icons: [
         {
@@ -55,22 +56,49 @@ export default buildConfig({
         },
       ],
     },
+
     components: {
       graphics: {
         Logo: '/components/admin/AurelexLogo',
         Icon: '/components/admin/AurelexIcon',
       },
+
       views: {
         dashboard: {
           Component: '/components/admin/DashboardShortcuts',
         },
       },
     },
+
+    // Live Preview configuration
+    livePreview: {
+      url: ({ data }) => {
+        const pagePaths: Record<string, string> = {
+          home: '/',
+          about: '/about',
+          'practice-areas': '/practice-areas',
+          attorneys: '/our-attorneys',
+          insights: '/articles',
+          contact: '/contact',
+        }
+
+        const path = pagePaths[String(data?.pageType)]
+
+        if (!path || !data?.slug) {
+          return null
+        }
+
+        const params = new URLSearchParams({
+          collection: 'pages',
+          slug: String(data.slug),
+          path,
+        })
+
+        return `/preview?${params.toString()}`
+      },
+      collections: ['pages'],
+    },
   },
-
-
-
-
 
   collections: [
     Users,
@@ -209,65 +237,59 @@ export default buildConfig({
         date: true,
         message: true,
       },
+
       redirectRelationships: ['pages'],
 
+      formSubmissionOverrides: {
+        admin: {
+          group: 'Client Requests',
+        },
 
+        fields: ({ defaultFields }) =>
+          defaultFields.map((field) => {
+            if (
+              !('name' in field) ||
+              field.name !== 'submissionData' ||
+              field.type !== 'array'
+            ) {
+              return field
+            }
 
-formSubmissionOverrides: {
-  admin: {
-    group: 'Client Requests',
-  },
-
-  fields: ({ defaultFields }) =>
-    defaultFields.map((field) => {
-      if (
-        !('name' in field) ||
-        field.name !== 'submissionData' ||
-        field.type !== 'array'
-      ) {
-        return field
-      }
-
-      return {
-        ...field,
-        fields: [
-          {
-            type: 'row',
-            fields: [
-              {
-                name: 'field',
-                type: 'text',
-                required: true,
-                admin: {
-                  width: '30%',
+            return {
+              ...field,
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'field',
+                      type: 'text',
+                      required: true,
+                      admin: {
+                        width: '30%',
+                      },
+                    },
+                    {
+                      name: 'value',
+                      type: 'textarea',
+                      required: true,
+                      admin: {
+                        width: '70%',
+                        className: 'submission-value-field',
+                      },
+                    },
+                  ],
                 },
-              },
-              {
-                name: 'value',
-                type: 'textarea',
-                required: true,
-                admin: {
-                  width: '70%',
-                  className: 'submission-value-field',
-                },
-              },
-            ],
-          },
-        ],
-      }
-    }),
-},
-
-
+              ],
+            }
+          }),
+      },
 
       formOverrides: {
         admin: {
           group: 'Website Content',
         },
       },
-
     }),
-
   ],
-
 })

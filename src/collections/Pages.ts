@@ -33,28 +33,28 @@ export const Pages: CollectionConfig = {
   defaultColumns: ['title', 'slug', 'pageType', 'updatedAt'],
   group: 'Website Content',
 
-preview: (doc) => {
-  const pagePaths: Record<string, string> = {
-    home: '/',
-    about: '/about',
-    'practice-areas': '/practice-areas',
-    attorneys: '/our-attorneys',
-    insights: '/articles',
-    contact: '/contact',
-  }
+// preview: (doc) => {
+//   const pagePaths: Record<string, string> = {
+//     home: '/',
+//     about: '/about',
+//     'practice-areas': '/practice-areas',
+//     attorneys: '/our-attorneys',
+//     insights: '/articles',
+//     contact: '/contact',
+//   }
 
-  const path = pagePaths[String(doc?.pageType)]
+//   const path = pagePaths[String(doc?.pageType)]
 
-  if (!path) return null
+//   if (!path) return null
 
-  const params = new URLSearchParams({
-    collection: 'pages',
-    slug: String(doc?.slug || ''),
-    path,
-  })
+//   const params = new URLSearchParams({
+//     collection: 'pages',
+//     slug: String(doc?.slug || ''),
+//     path,
+//   })
 
-  return `/preview?${params.toString()}`
-},
+//   return `/preview?${params.toString()}`
+// },
 },
 
   access: {
