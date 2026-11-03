@@ -211,12 +211,55 @@ export default buildConfig({
       },
       redirectRelationships: ['pages'],
 
-      formSubmissionOverrides: {
-        admin: {
-          group: 'Client Requests',
-        },
-      },
-      
+
+
+formSubmissionOverrides: {
+  admin: {
+    group: 'Client Requests',
+  },
+
+  fields: ({ defaultFields }) =>
+    defaultFields.map((field) => {
+      if (
+        !('name' in field) ||
+        field.name !== 'submissionData' ||
+        field.type !== 'array'
+      ) {
+        return field
+      }
+
+      return {
+        ...field,
+        fields: [
+          {
+            type: 'row',
+            fields: [
+              {
+                name: 'field',
+                type: 'text',
+                required: true,
+                admin: {
+                  width: '30%',
+                },
+              },
+              {
+                name: 'value',
+                type: 'textarea',
+                required: true,
+                admin: {
+                  width: '70%',
+                  className: 'submission-value-field',
+                },
+              },
+            ],
+          },
+        ],
+      }
+    }),
+},
+
+
+
       formOverrides: {
         admin: {
           group: 'Website Content',

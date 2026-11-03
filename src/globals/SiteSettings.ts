@@ -20,26 +20,34 @@ export const SiteSettings: GlobalConfig = {
           required: true,
           defaultValue: 'Aurelex Legal',
           admin: {
-            width: '50%',
+            width: '30%',
           },
         },
         {
           name: 'phone',
           type: 'text',
           admin: {
-            width: '50%',
+            width: '30%',
+          },
+        },
+        {
+          name: 'email',
+          type: 'email',
+          admin: {
+            width: '40%',
           },
         },
       ],
     },
-    {
-      name: 'email',
-      type: 'email',
-    },
+
     {
       name: 'address',
       type: 'textarea',
+      admin: {
+        width: '100%',
+      },
     },
+
     {
       type: 'row',
       fields: [
@@ -61,6 +69,7 @@ export const SiteSettings: GlobalConfig = {
         },
       ],
     },
+
     {
       name: 'defaultSEO',
       type: 'group',
@@ -68,14 +77,18 @@ export const SiteSettings: GlobalConfig = {
         {
           name: 'title',
           type: 'text',
+          label: 'SEO Title',
           defaultValue: 'Aurelex | Legal Services',
         },
+
         {
           name: 'description',
           type: 'textarea',
+          label: 'SEO Description',
           defaultValue:
             'Trusted legal guidance and strategic legal solutions for what matters most.',
         },
+
         {
           name: 'ogImage',
           type: 'upload',

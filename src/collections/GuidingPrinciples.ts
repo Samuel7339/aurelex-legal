@@ -13,7 +13,7 @@ export const GuidingPrinciples: CollectionConfig = {
 
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'sortOrder', 'updatedAt'],
+    defaultColumns: ['title', 'updatedAt'],
     group: 'People & Legal Services',
   },
 
@@ -38,14 +38,6 @@ export const GuidingPrinciples: CollectionConfig = {
       name: 'description',
       type: 'textarea',
       required: true,
-    },
-    {
-      name: 'sortOrder',
-      type: 'number',
-      defaultValue: 0,
-      admin: {
-        description: 'Controls the display order. Lower numbers appear first.',
-      },
     },
   ],
 }

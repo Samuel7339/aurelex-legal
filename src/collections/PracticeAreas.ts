@@ -1,3 +1,4 @@
+
 import type { CollectionConfig } from 'payload'
 import { slugField } from 'payload'
 
@@ -13,7 +14,7 @@ export const PracticeAreas: CollectionConfig = {
 
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'slug', 'updatedAt'],
+    defaultColumns: ['title', 'slug', 'sortOrder', 'updatedAt'],
     group: 'People & Legal Services',
   },
 
@@ -30,22 +31,42 @@ export const PracticeAreas: CollectionConfig = {
 
   fields: [
     {
-      name: 'title',
-      type: 'text',
-      required: true,
+      type: 'row',
+      fields: [
+        {
+          name: 'title',
+          type: 'text',
+          required: true,
+          admin: {
+            width: '60%',
+          },
+        },
+        {
+          name: 'sortOrder',
+          type: 'number',
+          defaultValue: 0,
+          admin: {
+            width: '40%',
+          },
+        },
+      ],
     },
+
     slugField({
       fieldToUse: 'title',
     }),
+
     {
       name: 'shortDescription',
       type: 'textarea',
       required: true,
     },
+
     {
       name: 'description',
       type: 'richText',
     },
+
     {
       name: 'services',
       type: 'array',
@@ -58,13 +79,5 @@ export const PracticeAreas: CollectionConfig = {
         },
       ],
     },
-    
-    {
-      name: 'sortOrder',
-      type: 'number',
-      defaultValue: 0,
-    },
-
-
   ],
 }

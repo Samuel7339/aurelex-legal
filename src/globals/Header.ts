@@ -25,7 +25,7 @@ export const Header: GlobalConfig = {
               type: 'text',
               required: true,
               admin: {
-                width: '50%',
+                width: '30%',
               },
             },
             {
@@ -38,33 +38,36 @@ export const Header: GlobalConfig = {
                 { label: 'Enter a Custom URL', value: 'custom' },
               ],
               admin: {
-                width: '50%',
+                width: '30%',
+              },
+            },
+            {
+              name: 'selectedPage',
+              type: 'select',
+              label: 'Select Page',
+              options: [...routeOptions],
+              admin: {
+                width: '40%',
+                condition: (_, siblingData) =>
+                  siblingData?.destinationType === 'page',
+              },
+            },
+            {
+              name: 'url',
+              type: 'text',
+              label: 'Custom URL',
+              required: true,
+              admin: {
+                width: '40%',
+                condition: (_, siblingData) =>
+                  siblingData?.destinationType === 'custom',
               },
             },
           ],
         },
-        {
-          name: 'selectedPage',
-          type: 'select',
-          label: 'Select Page',
-          options: [...routeOptions],
-          admin: {
-            condition: (_, siblingData) =>
-              siblingData?.destinationType === 'page',
-          },
-        },
-        {
-          name: 'url',
-          type: 'text',
-          label: 'Custom URL',
-          required: true,
-          admin: {
-            condition: (_, siblingData) =>
-              siblingData?.destinationType === 'custom',
-          },
-        },
       ],
     },
+
     {
       type: 'row',
       fields: [
@@ -74,7 +77,7 @@ export const Header: GlobalConfig = {
           label: 'Button Label',
           defaultValue: 'Schedule a Consultation',
           admin: {
-            width: '50%',
+            width: '30%',
           },
         },
         {
@@ -87,31 +90,33 @@ export const Header: GlobalConfig = {
             { label: 'Enter a Custom URL', value: 'custom' },
           ],
           admin: {
-            width: '50%',
+            width: '30%',
+          },
+        },
+        {
+          name: 'ctaSelectedPage',
+          type: 'select',
+          label: 'Select Page',
+          options: [...routeOptions],
+          admin: {
+            width: '40%',
+            condition: (_, siblingData) =>
+              siblingData?.ctaDestinationType === 'page',
+          },
+        },
+        {
+          name: 'ctaUrl',
+          type: 'text',
+          label: 'Custom Button URL',
+          required: true,
+          defaultValue: '/contact',
+          admin: {
+            width: '40%',
+            condition: (_, siblingData) =>
+              siblingData?.ctaDestinationType === 'custom',
           },
         },
       ],
-    },
-    {
-      name: 'ctaSelectedPage',
-      type: 'select',
-      label: 'Select Page',
-      options: [...routeOptions],
-      admin: {
-        condition: (_, siblingData) =>
-          siblingData?.ctaDestinationType === 'page',
-      },
-    },
-    {
-      name: 'ctaUrl',
-      type: 'text',
-      label: 'Custom Button URL',
-      required: true,
-      defaultValue: '/contact',
-      admin: {
-        condition: (_, siblingData) =>
-          siblingData?.ctaDestinationType === 'custom',
-      },
     },
   ],
 }

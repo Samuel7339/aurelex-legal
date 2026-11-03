@@ -11,7 +11,7 @@ const destinationFields = [
         type: 'text' as const,
         label: 'View All Label',
         admin: {
-          width: '50%',
+          width: '30%',
           condition: (_: unknown, siblingData: { showViewAll?: boolean }) =>
             siblingData?.showViewAll === true,
         },
@@ -26,50 +26,53 @@ const destinationFields = [
           { label: 'Enter a Custom URL', value: 'custom' },
         ],
         admin: {
-          width: '50%',
+          width: '30%',
           condition: (_: unknown, siblingData: { showViewAll?: boolean }) =>
             siblingData?.showViewAll === true,
         },
       },
+      {
+        name: 'viewAllSelectedPage',
+        type: 'select' as const,
+        label: 'Select Page',
+        options: [...routeOptions],
+        admin: {
+          width: '40%',
+          condition: (
+            _: unknown,
+            siblingData: {
+              showViewAll?: boolean
+              viewAllDestinationType?: string
+            },
+          ) =>
+            siblingData?.showViewAll === true &&
+            siblingData?.viewAllDestinationType === 'page',
+        },
+      },
+      {
+        name: 'viewAllCustomUrl',
+        type: 'text' as const,
+        label: 'Custom URL',
+        admin: {
+          width: '40%',
+          condition: (
+            _: unknown,
+            siblingData: {
+              showViewAll?: boolean
+              viewAllDestinationType?: string
+            },
+          ) =>
+            siblingData?.showViewAll === true &&
+            siblingData?.viewAllDestinationType === 'custom',
+        },
+      },
     ],
-  },
-  {
-    name: 'viewAllSelectedPage',
-    type: 'select' as const,
-    label: 'Select Page',
-    options: [...routeOptions],
-    admin: {
-      condition: (
-        _: unknown,
-        siblingData: {
-          showViewAll?: boolean
-          viewAllDestinationType?: string
-        },
-      ) =>
-        siblingData?.showViewAll === true &&
-        siblingData?.viewAllDestinationType === 'page',
-    },
-  },
-  {
-    name: 'viewAllCustomUrl',
-    type: 'text' as const,
-    label: 'Custom URL',
-    admin: {
-      condition: (
-        _: unknown,
-        siblingData: {
-          showViewAll?: boolean
-          viewAllDestinationType?: string
-        },
-      ) =>
-        siblingData?.showViewAll === true &&
-        siblingData?.viewAllDestinationType === 'custom',
-    },
   },
 ]
 
 export const Footer: GlobalConfig = {
   slug: 'footer',
+
   label: 'Footer',
 
   admin: {
@@ -82,6 +85,7 @@ export const Footer: GlobalConfig = {
       type: 'textarea',
       label: 'Footer Description',
     },
+
     {
       name: 'quickLinks',
       type: 'array',
@@ -95,7 +99,7 @@ export const Footer: GlobalConfig = {
               type: 'text',
               required: true,
               admin: {
-                width: '50%',
+                width: '30%',
               },
             },
             {
@@ -108,33 +112,36 @@ export const Footer: GlobalConfig = {
                 { label: 'Enter a Custom URL', value: 'custom' },
               ],
               admin: {
-                width: '50%',
+                width: '30%',
+              },
+            },
+            {
+              name: 'selectedPage',
+              type: 'select',
+              label: 'Select Page',
+              options: [...routeOptions],
+              admin: {
+                width: '40%',
+                condition: (_, siblingData) =>
+                  siblingData?.destinationType === 'page',
+              },
+            },
+            {
+              name: 'url',
+              type: 'text',
+              label: 'Custom URL',
+              required: true,
+              admin: {
+                width: '40%',
+                condition: (_, siblingData) =>
+                  siblingData?.destinationType === 'custom',
               },
             },
           ],
         },
-        {
-          name: 'selectedPage',
-          type: 'select',
-          label: 'Select Page',
-          options: [...routeOptions],
-          admin: {
-            condition: (_, siblingData) =>
-              siblingData?.destinationType === 'page',
-          },
-        },
-        {
-          name: 'url',
-          type: 'text',
-          label: 'Custom URL',
-          required: true,
-          admin: {
-            condition: (_, siblingData) =>
-              siblingData?.destinationType === 'custom',
-          },
-        },
       ],
     },
+
     {
       name: 'collectionLinks',
       type: 'array',

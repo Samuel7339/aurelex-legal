@@ -1,5 +1,5 @@
+
 import type { CollectionConfig } from 'payload'
-import { slugField } from 'payload'
 
 import {
   adminOnly,
@@ -30,34 +30,40 @@ export const FAQs: CollectionConfig = {
 
   fields: [
     {
-      name: 'question',
-      type: 'text',
-      required: true,
+      type: 'row',
+      fields: [
+        {
+          name: 'question',
+          type: 'text',
+          required: true,
+          admin: {
+            width: '65%',
+          },
+        },
+        {
+          name: 'category',
+          type: 'select',
+          required: true,
+          options: [
+            {
+              label: 'General Questions',
+              value: 'general',
+            },
+            {
+              label: 'Case & Process',
+              value: 'case-process',
+            },
+          ],
+          admin: {
+            width: '35%',
+          },
+        },
+      ],
     },
     {
       name: 'answer',
       type: 'textarea',
       required: true,
-    },
-    {
-      name: 'category',
-      type: 'select',
-      required: true,
-      options: [
-        {
-          label: 'General Questions',
-          value: 'general',
-        },
-        {
-          label: 'Case & Process',
-          value: 'case-process',
-        },
-      ],
-    },
-    {
-      name: 'sortOrder',
-      type: 'number',
-      defaultValue: 0,
     },
   ],
 }

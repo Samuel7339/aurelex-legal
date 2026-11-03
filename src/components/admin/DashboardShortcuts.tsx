@@ -4,6 +4,7 @@ import { getPayloadClient } from '@/lib/payload/getPayloadClient'
 import { headers } from 'next/headers'
 import { getPendingDrafts } from '@/lib/dashboard/getPendingDrafts'
 import { getDashboardStats } from '@/lib/dashboard/getDashboardStats'
+import GlobalSearch from '@/components/admin/GlobalSearch'
 
 const quickAccess = [
     {
@@ -146,8 +147,10 @@ export default async function DashboardShortcuts() {
 
     const isAdmin = user?.role === 'admin'
 
+    const canSearch = user?.role === 'admin' || user?.role === 'editor'
+
     return (
-        <main className="mx-auto w-full max-w-[1500px] space-y-12 px-4 py-7 sm:px-6 sm:py-9 lg:px-10 lg:py-12">
+        <main className="mx-auto w-full max-w-[1500px] space-y-16 px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-14">
             {/* Welcome */}
             <section className="relative overflow-hidden rounded-2xl bg-[#172338] px-6 py-9 sm:px-10 sm:py-12 lg:px-14 lg:py-14">
                 <div
@@ -178,9 +181,18 @@ export default async function DashboardShortcuts() {
                 </div>
             </section>
 
+            {/* Global Search */}
+            {canSearch && (
+                <section className="border-t border-slate-200 pt-12">
+                    <GlobalSearch />
+                </section>
+            )}
 
             {/* Activity Overview */}
-            <section aria-labelledby="activity-overview-heading">
+            <section
+                aria-labelledby="activity-overview-heading"
+                className="border-t border-slate-200 pt-12"
+            >
                 <div className="mb-6">
                     <p className="text-sm font-semibold uppercase tracking-[0.17em] text-[#9A7A42]">
                         At a glance
@@ -270,206 +282,209 @@ export default async function DashboardShortcuts() {
                 </div>
             </section>
 
-
             {/* Pending Review */}
+            {isAdmin && (
+                <section
+                    aria-labelledby="pending-review-heading"
+                    className="border-t border-slate-200 pt-12"
+                >
+                    <div className="mb-7">
+                        <div className="flex flex-col gap-5 rounded-2xl border border-[#E8DFCD] bg-[#F7F4ED] p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-8">
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <span className="h-1.5 w-1.5 rounded-full bg-[#C5A052]" />
 
-        {isAdmin  && (
-            <section aria-labelledby="pending-review-heading">
-                <div className="mb-7">
-                    <div className="flex flex-col gap-5 rounded-2xl border border-[#E8DFCD] bg-[#F7F4ED] p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-8">
-                        <div>
-                            <div className="flex items-center gap-2">
-                                <span className="h-1.5 w-1.5 rounded-full bg-[#C5A052]" />
+                                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9A7A42] sm:text-sm">
+                                        Content approval
+                                    </p>
+                                </div>
 
-                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9A7A42] sm:text-sm">
-                                    Content approval
+                                <h2
+                                    id="pending-review-heading"
+                                    className="mt-3 text-2xl font-semibold tracking-tight text-[#172338] sm:text-3xl"
+                                >
+                                    Pending Review
+                                </h2>
+
+                                <p className="mt-2 max-w-xl text-sm leading-6 text-slate-600 sm:text-base">
+                                    Review unpublished content across your website
+                                    before approving and publishing it.
                                 </p>
                             </div>
 
-                            <h2
-                                id="pending-review-heading"
-                                className="mt-3 text-2xl font-semibold tracking-tight text-[#172338] sm:text-3xl"
-                            >
-                                Pending Review
-                            </h2>
+                            <div className="flex shrink-0 items-center gap-4 rounded-xl border border-[#E8DFCD] bg-white px-5 py-4">
+                                <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#F7F4ED] text-[#9A7A42]">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="1.7"
+                                        className="h-6 w-6"
+                                        aria-hidden="true"
+                                    >
+                                        <path
+                                            d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"
+                                            strokeLinecap="round"
+                                        />
+                                    </svg>
+                                </div>
 
-                            <p className="mt-2 max-w-xl text-sm leading-6 text-slate-600 sm:text-base">
-                                Review unpublished content across your website
-                                before approving and publishing it.
-                            </p>
+                                <div>
+                                    <p className="text-2xl font-semibold leading-none text-[#172338]">
+                                        {pendingDrafts.length}
+                                    </p>
+
+                                    <p className="mt-1.5 text-xs font-medium text-slate-500">
+                                        {pendingDrafts.length === 1
+                                            ? 'Draft awaiting review'
+                                            : 'Drafts awaiting review'}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
+                    </div>
 
-                        <div className="flex shrink-0 items-center gap-4 rounded-xl border border-[#E8DFCD] bg-white px-5 py-4">
-                            <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#F7F4ED] text-[#9A7A42]">
+                    {/* Draft List */}
+                    {pendingDrafts.length === 0 ? (
+                        <div className="rounded-2xl border border-dashed border-[#D9DDE4] bg-white px-6 py-12 text-center shadow-sm sm:py-14">
+                            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F7F4ED] text-[#9A7A42]">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 24 24"
                                     fill="none"
                                     stroke="currentColor"
-                                    strokeWidth="1.7"
-                                    className="h-6 w-6"
+                                    strokeWidth="1.6"
+                                    className="h-8 w-8"
                                     aria-hidden="true"
                                 >
                                     <path
-                                        d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"
+                                        d="M9 12.5 11 14.5 15.5 10M12 3l2.2 1.5 2.7-.1 1.1 2.5 2.3 1.4-.5 2.7 1 2.5-1.9 2-.4 2.7-2.7.5-2.1 1.7-2.4-1.2-2.7.3-1.4-2.3-2.5-1.1.1-2.7-1.4-2.3 1.5-2.2.1-2.7 2.5-1.1 1.4-2.3 2.7.5Z"
                                         strokeLinecap="round"
+                                        strokeLinejoin="round"
                                     />
                                 </svg>
                             </div>
 
-                            <div>
-                                <p className="text-2xl font-semibold leading-none text-[#172338]">
-                                    {pendingDrafts.length}
-                                </p>
+                            <h3 className="mt-5 text-lg font-semibold text-[#172338] sm:text-xl">
+                                All caught up!
+                            </h3>
 
-                                <p className="mt-1.5 text-xs font-medium text-slate-500">
-                                    {pendingDrafts.length === 1
-                                        ? 'Draft awaiting review'
-                                        : 'Drafts awaiting review'}
-                                </p>
-                            </div>
+                            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500 sm:text-base">
+                                There are no unpublished content drafts waiting
+                                for review. New drafts will appear here when
+                                they are ready.
+                            </p>
+
+                            <div className="mx-auto mt-6 h-1 w-12 rounded-full bg-[#C5A052]" />
                         </div>
-                    </div>
-                </div>
+                    ) : (
+                        <div className="space-y-3">
+                            {pendingDrafts.map((draft) => {
+                                const parentId =
+                                    typeof draft.parent === 'object'
+                                        ? draft.parent.id
+                                        : draft.parent
 
-                {/* Draft List */}
-                {pendingDrafts.length === 0 ? (
-                    <div className="rounded-2xl border border-dashed border-[#D9DDE4] bg-white px-6 py-12 text-center shadow-sm sm:py-14">
-                        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F7F4ED] text-[#9A7A42]">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="1.6"
-                                className="h-8 w-8"
-                                aria-hidden="true"
-                            >
-                                <path
-                                    d="M9 12.5 11 14.5 15.5 10M12 3l2.2 1.5 2.7-.1 1.1 2.5 2.3 1.4-.5 2.7 1 2.5-1.9 2-.4 2.7-2.7.5-2.1 1.7-2.4-1.2-2.7.3-1.4-2.3-2.5-1.1.1-2.7-1.4-2.3 1.5-2.2.1-2.7 2.5-1.1 1.4-2.3 2.7.5Z"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                />
-                            </svg>
-                        </div>
+                                const contentTitle =
+                                    draft.version?.title ||
+                                    draft.version?.name ||
+                                    draft.version?.question ||
+                                    draft.version?.heading ||
+                                    'Untitled content'
 
-                        <h3 className="mt-5 text-lg font-semibold text-[#172338] sm:text-xl">
-                            All caught up!
-                        </h3>
+                                return (
+                                    <div
+                                        key={`${draft.collection}-${draft.id}`}
+                                        className="group flex flex-col gap-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:border-[#D8C49A] hover:shadow-md sm:flex-row sm:items-center sm:justify-between sm:p-6"
+                                    >
+                                        <div className="flex min-w-0 items-start gap-4">
+                                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#F7F4ED] text-[#9A7A42] transition-colors group-hover:bg-[#EFE6D4]">
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="1.6"
+                                                    className="h-6 w-6"
+                                                    aria-hidden="true"
+                                                >
+                                                    <path
+                                                        d="M7 3.75h7l5 5V20a.25.25 0 0 1-.25.25H7A1.25 1.25 0 0 1 5.75 19V5A1.25 1.25 0 0 1 7 3.75Z"
+                                                        strokeLinejoin="round"
+                                                    />
 
-                        <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500 sm:text-base">
-                            There are no unpublished content drafts waiting
-                            for review. New drafts will appear here when
-                            they are ready.
-                        </p>
+                                                    <path
+                                                        d="M14 3.75V9h5M9 13h6M9 16.5h6"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    />
+                                                </svg>
+                                            </div>
 
-                        <div className="mx-auto mt-6 h-1 w-12 rounded-full bg-[#C5A052]" />
-                    </div>
-                ) : (
-                    <div className="space-y-3">
-                        {pendingDrafts.map((draft) => {
-                            const parentId =
-                                typeof draft.parent === 'object'
-                                    ? draft.parent.id
-                                    : draft.parent
+                                            <div className="min-w-0 flex-1">
+                                                <h3 className="break-words text-base font-semibold text-[#172338] sm:text-lg">
+                                                    {contentTitle}
+                                                </h3>
 
-                            const contentTitle =
-                                draft.version?.title ||
-                                draft.version?.name ||
-                                draft.version?.question ||
-                                draft.version?.heading ||
-                                'Untitled content'
+                                                <div className="mt-2 flex flex-wrap items-center gap-2">
+                                                    <span className="rounded-md border border-[#E8DFCD] bg-[#FAF8F3] px-2.5 py-1 text-xs font-medium text-[#8C713F]">
+                                                        {draft.collectionLabel}
+                                                    </span>
 
-                            return (
-                                <div
-                                    key={`${draft.collection}-${draft.id}`}
-                                    className="group flex flex-col gap-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:border-[#D8C49A] hover:shadow-md sm:flex-row sm:items-center sm:justify-between sm:p-6"
-                                >
-                                    <div className="flex min-w-0 items-start gap-4">
-                                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#F7F4ED] text-[#9A7A42] transition-colors group-hover:bg-[#EFE6D4]">
+                                                    {draft.version?.pageType && (
+                                                        <span className="text-xs text-slate-500">
+                                                            {draft.version.pageType}
+                                                        </span>
+                                                    )}
+
+                                                    <span className="text-xs text-slate-400">
+                                                        Updated ·{' '}
+                                                        {draft.updatedAt
+                                                            ? new Date(
+                                                                draft.updatedAt,
+                                                            ).toLocaleDateString()
+                                                            : 'Date unavailable'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <a
+                                            href={`/admin/collections/${draft.collection}/${encodeURIComponent(String(parentId))}`}
+                                            className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-lg border border-[#172338] bg-[#172338] px-5 py-2.5 text-sm font-semibold text-white no-underline transition-all duration-200 hover:border-[#263B58] hover:bg-[#263B58] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9A7A42]"
+                                        >
+                                            Open Draft
+
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 24 24"
                                                 fill="none"
                                                 stroke="currentColor"
-                                                strokeWidth="1.6"
-                                                className="h-6 w-6"
+                                                strokeWidth="2"
+                                                className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
                                                 aria-hidden="true"
                                             >
                                                 <path
-                                                    d="M7 3.75h7l5 5V20a.25.25 0 0 1-.25.25H7A1.25 1.25 0 0 1 5.75 19V5A1.25 1.25 0 0 1 7 3.75Z"
-                                                    strokeLinejoin="round"
-                                                />
-
-                                                <path
-                                                    d="M14 3.75V9h5M9 13h6M9 16.5h6"
+                                                    d="M5 12h14M13 6l6 6-6 6"
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
                                                 />
                                             </svg>
-                                        </div>
-
-                                        <div className="min-w-0 flex-1">
-                                            <h3 className="break-words text-base font-semibold text-[#172338] sm:text-lg">
-                                                {contentTitle}
-                                            </h3>
-
-                                            <div className="mt-2 flex flex-wrap items-center gap-2">
-                                                <span className="rounded-md border border-[#E8DFCD] bg-[#FAF8F3] px-2.5 py-1 text-xs font-medium text-[#8C713F]">
-                                                    {draft.collectionLabel}
-                                                </span>
-
-                                                {draft.version?.pageType && (
-                                                    <span className="text-xs text-slate-500">
-                                                        {draft.version.pageType}
-                                                    </span>
-                                                )}
-
-                                                <span className="text-xs text-slate-400">
-                                                    Updated ·{' '}
-                                                    {draft.updatedAt
-                                                        ? new Date(
-                                                            draft.updatedAt,
-                                                        ).toLocaleDateString()
-                                                        : 'Date unavailable'}
-                                                </span>
-                                            </div>
-                                        </div>
+                                        </a>
                                     </div>
-
-                                    <a
-                                        href={`/admin/collections/${draft.collection}/${encodeURIComponent(String(parentId))}`}
-                                        className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-lg border border-[#172338] bg-[#172338] px-5 py-2.5 text-sm font-semibold text-white no-underline transition-all duration-200 hover:border-[#263B58] hover:bg-[#263B58] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9A7A42]"
-                                    >
-                                        Open Draft
-
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
-                                            aria-hidden="true"
-                                        >
-                                            <path
-                                                d="M5 12h14M13 6l6 6-6 6"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-                                        </svg>
-                                    </a>
-                                </div>
-                            )
-                        })}
-                    </div>
-                )}
-            </section>
-
+                                )
+                            })}
+                        </div>
+                    )}
+                </section>
             )}
 
             {/* Quick Access */}
-            <section aria-labelledby="quick-access-heading">
+            <section
+                aria-labelledby="quick-access-heading"
+                className="border-t border-slate-200 pt-12"
+            >
                 <div className="mb-7">
                     <p className="text-sm font-semibold uppercase tracking-[0.17em] text-[#9A7A42]">
                         Frequently used
@@ -526,7 +541,7 @@ export default async function DashboardShortcuts() {
             {/* Website Management Groups */}
             <section
                 aria-labelledby="management-heading"
-                className="space-y-7"
+                className="space-y-7 border-t border-slate-200 pt-12"
             >
                 <div>
                     <p className="text-sm font-semibold uppercase tracking-[0.17em] text-[#9A7A42]">

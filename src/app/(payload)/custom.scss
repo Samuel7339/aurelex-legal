@@ -1150,3 +1150,15 @@ body:has(a[href*="/collections/consultation-bookings/"]) :is(.field-type.read-on
   color: var(--readonly-text) !important;
   cursor: not-allowed !important;
 }
+
+/* =========================================
+   AURELEX LEGAL — FORM SUBMISSION VALUE
+   ========================================= */
+
+textarea[id^="field-submissionData__"][id$="__value"] {
+  min-height: 38px !important;
+  height: 38px !important;
+  padding: 8px 10px !important;
+  line-height: 20px !important;
+  resize: vertical;
+}

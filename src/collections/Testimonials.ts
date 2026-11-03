@@ -1,5 +1,5 @@
+
 import type { CollectionConfig } from 'payload'
-import { slugField } from 'payload'
 
 import {
   adminOnly,
@@ -30,29 +30,38 @@ export const Testimonials: CollectionConfig = {
 
   fields: [
     {
-      name: 'clientName',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'role',
-      type: 'text',
+      type: 'row',
+      fields: [
+        {
+          name: 'clientName',
+          type: 'text',
+          required: true,
+          admin: {
+            width: '40%',
+          },
+        },
+        {
+          name: 'role',
+          type: 'text',
+          admin: {
+            width: '35%',
+          },
+        },
+        {
+          name: 'rating',
+          type: 'number',
+          min: 1,
+          max: 5,
+          admin: {
+            width: '25%',
+          },
+        },
+      ],
     },
     {
       name: 'testimonial',
       type: 'textarea',
       required: true,
-    },
-    {
-      name: 'rating',
-      type: 'number',
-      min: 1,
-      max: 5,
-    },
-    {
-      name: 'sortOrder',
-      type: 'number',
-      defaultValue: 0,
     },
   ],
 }

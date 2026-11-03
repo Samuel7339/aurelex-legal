@@ -200,6 +200,7 @@ export interface Media {
 export interface PracticeArea {
   id: string;
   title: string;
+  sortOrder?: number | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -227,7 +228,6 @@ export interface PracticeArea {
         id?: string | null;
       }[]
     | null;
-  sortOrder?: number | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -297,9 +297,8 @@ export interface Testimonial {
   id: string;
   clientName: string;
   role?: string | null;
-  testimonial: string;
   rating?: number | null;
-  sortOrder?: number | null;
+  testimonial: string;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -311,9 +310,8 @@ export interface Testimonial {
 export interface Faq {
   id: string;
   question: string;
-  answer: string;
   category: 'general' | 'case-process';
-  sortOrder?: number | null;
+  answer: string;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -563,10 +561,6 @@ export interface GuidingPrinciple {
   id: string;
   title: string;
   description: string;
-  /**
-   * Controls the display order. Lower numbers appear first.
-   */
-  sortOrder?: number | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -1120,6 +1114,7 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface PracticeAreasSelect<T extends boolean = true> {
   title?: T;
+  sortOrder?: T;
   generateSlug?: T;
   slug?: T;
   shortDescription?: T;
@@ -1130,7 +1125,6 @@ export interface PracticeAreasSelect<T extends boolean = true> {
         service?: T;
         id?: T;
       };
-  sortOrder?: T;
   meta?:
     | T
     | {
@@ -1176,9 +1170,8 @@ export interface AttorneysSelect<T extends boolean = true> {
 export interface TestimonialsSelect<T extends boolean = true> {
   clientName?: T;
   role?: T;
-  testimonial?: T;
   rating?: T;
-  sortOrder?: T;
+  testimonial?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -1189,9 +1182,8 @@ export interface TestimonialsSelect<T extends boolean = true> {
  */
 export interface FaqsSelect<T extends boolean = true> {
   question?: T;
-  answer?: T;
   category?: T;
-  sortOrder?: T;
+  answer?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -1455,7 +1447,6 @@ export interface ConsultationBookingsSelect<T extends boolean = true> {
 export interface GuidingPrinciplesSelect<T extends boolean = true> {
   title?: T;
   description?: T;
-  sortOrder?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
